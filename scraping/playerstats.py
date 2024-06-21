@@ -54,7 +54,7 @@ def NBAPlayerStats():
         mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="root123",
+            password="---------",
             database="player_stats"
 
         )
@@ -97,9 +97,10 @@ def NBAPlayerStats():
         """
         mycursor.execute(sql)
 
-        engine = create_engine("mysql+mysqlconnector://root:root123@localhost/player_stats")
+        engine = create_engine("mysql+mysqlconnector://root:---------@localhost/player_stats")
 
         df_sorted.to_sql(f"season{year}", con=engine, if_exists='append', index=False)
+
 
 
 #NBA's BAA years
@@ -139,7 +140,7 @@ def BAAPlayerStats():
         mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="root123",
+            password="---------",
             database="player_stats"
 
         )
@@ -182,7 +183,7 @@ def BAAPlayerStats():
         """
         mycursor.execute(sql)
 
-        engine = create_engine("mysql+mysqlconnector://root:root123@localhost/player_stats")
+        engine = create_engine("mysql+mysqlconnector://root:---------@localhost/player_stats")
 
         df_sorted.to_sql(f"season{year}", con=engine, if_exists='append', index=False)
 
