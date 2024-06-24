@@ -1,4 +1,3 @@
-import os
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -54,7 +53,7 @@ def NBAPlayerStats():
         mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="---------",
+            password="abhi12345",
             database="player_stats"
 
         )
@@ -97,7 +96,7 @@ def NBAPlayerStats():
         """
         mycursor.execute(sql)
 
-        engine = create_engine("mysql+mysqlconnector://root:---------@localhost/player_stats")
+        engine = create_engine("mysql+mysqlconnector://root:abhi12345@localhost/player_stats")
 
         df_sorted.to_sql(f"season{year}", con=engine, if_exists='append', index=False)
 
@@ -140,7 +139,7 @@ def BAAPlayerStats():
         mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="---------",
+            password="abhi12345",
             database="player_stats"
 
         )
@@ -183,7 +182,7 @@ def BAAPlayerStats():
         """
         mycursor.execute(sql)
 
-        engine = create_engine("mysql+mysqlconnector://root:---------@localhost/player_stats")
+        engine = create_engine("mysql+mysqlconnector://root:abhi12345@localhost/player_stats")
 
         df_sorted.to_sql(f"season{year}", con=engine, if_exists='append', index=False)
 
