@@ -18,8 +18,17 @@
       <div>
 
           <h1 class="text-center">Players Stats 2023-2024</h1>
+
+          <div class="btn-group container  mt-5  justify-content-center">
+            <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked />
+            <label class="btn btn-default" for="option1">Players</label>
+            <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off" />
+            <label class="btn btn-default" for="option2">Games</label>
+          </div>
+
           <div class="table-responsive">
-            <table id="players" class="table align-items-center table-flush mt-5">
+
+            <table id="players" class="table align-items-center table-flush mt-5 fade-in-table">
               <thead>
                   <tr>
                       <th>Player</th>
@@ -37,33 +46,23 @@
                       <th>TOV</th>
                   </tr>
               </thead>
-              
-              <tbody>
-              </tbody>
           </table>
-          <table id="games" class="table align-items-center table-flush mt-5">
+          <table id="games" class="table align-items-center table-flush fade-in-table mt-5">
             <thead>
                 <tr>
-                    <th>Player</th>
-                    <th>Position</th>
-                    <th>Age</th>
-                    <th>Team</th>
-                    <th>Points</th>
-                    <th>Rebounds</th>
-                    <th>Assists</th>
-                    <th>Steals</th>
-                    <th>Blocks</th>
-                    <th>FG%</th>
-                    <th>3PT%</th>
-                    <th>FT%</th>
-                    <th>TOV</th>
+                    <th>Date</th>
+                    <th>Visitor</th>
+                    <th>Pts</th>
+                    <th>Home</th>
+                    <th>Pts</th>
+                    <th>Boxscore</th>
+                    <th>OT</th>
+                    <th>Attendance</th>
+                    <th>Arena</th>
                 </tr>
             </thead>
-            
-            <tbody>
-            </tbody>
           </table>
-          </div>
+        </div>
           
       </div>
   </div>
