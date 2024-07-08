@@ -10,64 +10,83 @@
 
 </head>
 <body>
-  <div class="jumbotron">
-    <h1 class="container text-center display-4 mt-5">Welcome to Hoop Stats</h1>
-  </div>
 
-  <div class="container mt-5 ">
+
+  <div class="container mt-5 d-flex flex-row align-items-center" style="width: 100%;">
       <div>
-
-          <h1 class="text-center">Players Stats 2023-2024</h1>
-
-          <div class="btn-group container  mt-5  justify-content-center">
+        <div class="head">
+          <header class=" jumbotron text-center align-items-center" id="header">
+            <h1 class="container display-4 mt-5 align-items-center">Hoop Stats</h1>
+            <p class="lead mt-3">Get the latest NBA stats and information</p>
+          </header>
+          <div class="container btn-group mt-5 d-flex flex-wrap justify-content-center" id="options">
             <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked />
-            <label class="btn btn-default" for="option1">Players</label>
+            <label class="btn btn-default" for="option1">Get Players</label>
             <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off" />
-            <label class="btn btn-default" for="option2">Games</label>
+            <label class="btn btn-default" for="option2">Get Games</label>
+            <input type="radio" class="btn-check" name="options" id="option3" autocomplete="off" />
+            <label class="btn btn-default" for="option3">Get Player</label>
+            <input type="radio" class="btn-check" name="options" id="option4" autocomplete="off" />
+            <label class="btn btn-default" for="option4">Get Game</label>
+            <input type="radio" class="btn-check" name="options" id="option5" autocomplete="off" />
+            <label class="btn btn-default" for="option5">Randomize</label>
+            <input type="radio" class="btn-check" name="options" id="option6" autocomplete="off" />
+            <label class="btn btn-default" for="option6">Other Stats</label>
           </div>
-
-          <div class="table-responsive">
-
-            <table id="players" class="table align-items-center table-flush mt-5 fade-in-table">
-              <thead>
-                  <tr>
-                      <th>Player</th>
-                      <th>Position</th>
-                      <th>Age</th>
-                      <th>Team</th>
-                      <th>Points</th>
-                      <th>Rebounds</th>
-                      <th>Assists</th>
-                      <th>Steals</th>
-                      <th>Blocks</th>
-                      <th>FG%</th>
-                      <th>3PT%</th>
-                      <th>FT%</th>
-                      <th>TOV</th>
-                  </tr>
-              </thead>
-          </table>
-          <table id="games" class="table align-items-center table-flush fade-in-table mt-5">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Visitor</th>
-                    <th>Pts</th>
-                    <th>Home</th>
-                    <th>Pts</th>
-                    <th>Boxscore</th>
-                    <th>OT</th>
-                    <th>Attendance</th>
-                    <th>Arena</th>
-                </tr>
-            </thead>
-          </table>
         </div>
-          
-      </div>
-  </div>
-</body>
+        <div class="container">
 
-<script src="scripts.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+            <div class="row align-items-center">
+              <div class="col-12">
+                <form class="form-inline" id="yearForm">
+                  <input type="number" class="form-group mt-5 mb-5 col-6" id="year" placeholder="Enter Season (ex. 2024)">
+                  <button type="button" id="year-submit" class="form-group btn-primary" onclick="">ENTER</button>
+                </form>
+                <table id="players" class="table mx-auto fade-in-table">
+                 
+                  <thead>
+                      <tr id="tableHeader">
+                          <th>Player</th>
+                          <th>Position</th>
+                          <th>Age</th>
+                          <th>Team</th>
+                          <th>Points</th>
+                          <th>Rebounds</th>
+                          <th>Assists</th>
+                          <th>Steals</th>
+                          <th>Blocks</th>
+                          <th>FG%</th>
+                          <th>3PT%</th>
+                          <th>FT%</th>
+                          <th>TOV</th>
+                      </tr>
+                  </thead>
+                </table>
+                <table id="games" class="table mx-auto fade-in-table">
+                  
+                  <thead>
+                    
+                      <tr id="tableHeader">
+                          <th>Date</th>
+                          <th>Visitor</th>
+                          <th>Pts</th>
+                          <th>Home</th>
+                          <th>Pts</th>
+                          <th>Boxscore</th>
+                          <th>OT</th>
+                          <th>Attendance</th>
+                          <th>Arena</th>
+                      </tr>
+                  </thead>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+  </div>
+
+  <script src="scripts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
 </html>

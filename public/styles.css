@@ -312,6 +312,44 @@ h3,
     flex-grow: 1;
 }
 
+#header{
+    opacity: 1;
+    animation-name: fadeinopacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 2s
+}
+
+#options{
+    opacity: 0;
+    animation-name: fadeinopacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 2s;
+    animation-delay: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+#yearText{
+    opacity: 0;
+    animation-name: fadeinopacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 2s;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeinopacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+
 @media (min-width: 1200px) {
 
     .col-xl-6 {
@@ -320,12 +358,15 @@ h3,
     }
 }
 
+.head{
+    width: 1200px;
+    max-width: 1200px;
+}
+
 .table {
-    width: 100%;
     margin-bottom: 1rem;
     background-color: transparent;
     overflow: auto;
-
 }
 
 .table th,
@@ -335,13 +376,31 @@ h3,
     border-top: 1px solid #e9ecef;
     overflow: auto;
     word-wrap: break-word;
+    width: 100%;
+    border: 1px solid #000000;
 
+}
 
+.table tr{
+    transition: all 0.3s;
+}
+
+.table td{
+    transition: all 0.3s;
+}
+
+.table tr:hover{
+    background-color: #a2a2a253;
+}
+
+.table td:hover{
+    background-color: #a2a2a2;
 }
 
 .table thead th {
     vertical-align: bottom;
     border-bottom: 2px solid #e9ecef;
+    background-color: #585858;
 }
 
 .table tbody + tbody {
@@ -388,23 +447,20 @@ h3,
 
 }
 
+html {
+    overflow-y:scroll;
+}
 
 .fade-in-table {
     opacity: 0;
     display: none; /* Hidden by default */
     transition: opacity 2s ease-in-out, transform 1s ease-in-out; /* Fade in and translate the element over 1 second */
-    translate: translateY(1000px) ;    
 }
 
 .fade-in-table.show {
-    translate: translateY(0px) ;
     opacity: 1;
-    display: table;
-    translate: translateY(0px) ;
+    display: block;
 }
-
-
-
 
 @media screen and (prefers-reduced-motion: reduce) {
     .btn {
@@ -1007,6 +1063,7 @@ a.text-white:focus {
 }
 
 
+
 @media print {
     *,
   *::before,
@@ -1022,6 +1079,7 @@ a.text-white:focus {
     thead {
         display: table-header-group;
     }
+
 
     tr,
   img {

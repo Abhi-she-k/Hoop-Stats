@@ -1,21 +1,88 @@
-async function getInitialData() {
+async function getInitData(year) {
     
-    const url1 = "players/2024";
-    const url2 = "games/2024"
+
+    const url1 = "players/" + year;
+    const url2 = "games/" + year;
+
+    try {
+        const response = await fetch(url1);
+        
+        if (!response.ok) {
+          if (response.status === 500) {
+              alert('Failed to fetch data');
+          } else {
+            throw new Error(`HTTP error: ${response.status}`);
+          }
+        }
+        
+        const data = await response.json();
+        processPlayersStats(data);
+    }
+    catch (error) {
+        console.error('Error:', error.message);
+      }
+
     
-    const response1 = await fetch(url1)
-    const data1 = await response1.json()
-
-    const response2 = await fetch(url2)
-    const data2 = await response2.json()
-
-    processPlayersStats(data1);
-    processGamesStats(data2);
+    try {
+        const response = await fetch(url2);
+        
+        if (!response.ok) {
+          if (response.status === 500) {
+              alert('Failed to fetch data');
+          } else {
+            throw new Error(`HTTP error: ${response.status}`);
+          }
+        }
+        
+        const data = await response.json();
+        processGamesStats(data);
+    }
+    catch (error) {
+        console.error('Error:', error.message);
+      }  
 }
+
+async function getData(type, year) {
+    
+    const url1 = type + '/' + year;
+    console.log(url1);
+    try {
+        const response = await fetch(url1);
+        
+        if (!response.ok) {
+          if (response.status === 500) {
+              alert('Failed to fetch data');
+          } else {
+            throw new Error(`HTTP error: ${response.status}`);
+          }
+        }
+        
+        const data = await response.json();
+        return data;
+    }
+    catch (error) {
+        console.error('Error:', error.message);
+    }
+}
+
+
 async function processGamesStats(games) {
     let table = document.getElementById('games');
-    let table2 = document.getElementById('players');
 
+    if (table.innerHTML != "") {
+        table.innerHTML = `
+            <tr id="tableHeader">
+                <th>Date</th>
+                <th>Visitor</th>
+                <th>Pts</th>
+                <th>Home</th>
+                <th>Pts</th>
+                <th>Boxscore</th>
+                <th>OT</th>
+                <th>Attendance</th>
+                <th>Arena</th>
+            </tr>`;
+    }
 
     for (let i = 0; i < games.length; i++) {
         let row = document.createElement('tr');
@@ -67,9 +134,29 @@ async function processGamesStats(games) {
     }
 }
 
+
+
 async function processPlayersStats(players) {
     let table = document.getElementById('players');
-    let table2 = document.getElementById('games');
+    
+    if (table.innerHTML != "") {
+        table.innerHTML = `
+            <tr id="tableHeader">
+                <th>Player</th>
+                <th>Position</th>
+                <th>Age</th>
+                <th>Team</th>
+                <th>Points</th>
+                <th>Rebounds</th>
+                <th>Assists</th>
+                <th>Steals</th>
+                <th>Blocks</th>
+                <th>FG%</th>
+                <th>3PT%</th>
+                <th>FT%</th>
+                <th>TOV</th>
+            </tr>`;
+    }
 
 
     for (let i = 0; i < players.length; i++) {
@@ -157,23 +244,32 @@ async function processPlayersStats(players) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    getInitialData();
-    
+    getInitData(2024);
+    var table1 = document.getElementById('players');
     var table2 = document.getElementById('games');
+
     table2.style.display = "none";
 
     var animation1 = document.querySelectorAll('.fade-in-table')
-    animation1[0].style.display = 'block'; // Show the element
-    setTimeout(function() {
-        animation1[0].classList.add('show'); // Add class to trigger opacity transition
-    }, 750); // Delay to ensure display change is applied first
 
-    var games = document.getElementById('option2'); 
+    animation1[0].style.display = 'block'; // Show the element
+    
+    setTimeout(function () {
+        animation1[0].classList.add('show'); // Add class to trigger opacity transition
+    }, 2000); // Delay to ensure display change is applied first
+
     var players = document.getElementById('option1');
+    var games = document.getElementById('option2'); 
+    var player = document.getElementById('option3');
+    var game = document.getElementById('option4'); 
+    var random = document.getElementById('option5');
+    var other = document.getElementById('option6'); 
+    
+
+    
 
     // Event listener for when 'game' is clicked
     games.addEventListener('click', function () {
-        var table1 = document.getElementById('players');
         
         table1.style.display = "none"; // Hide table1 (players table)
         animation1[0].classList.remove('show');
@@ -185,10 +281,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     players.addEventListener('click', function () {
-        var table1 = document.getElementById('players');
         
-        table1.style.display = "none"; // Hide table1 (players table)
+        table2.style.display = "none"; // Hide table2 (games table)
         animation1[1].classList.remove('show');
+
 
         animation1[0].style.display = 'block'; // Show the element
         setTimeout(function() {
@@ -196,6 +292,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 750); // Delay to ensure display change is applied first
     });
 
+    var yearsubmit = document.getElementById('year-submit');
+
+    yearsubmit.addEventListener('click', function () {
+        var year = document.getElementById('year').value;
+        document.getElementById("yearForm").reset();
+        
+ 
+        if (players.checked) {
+            getData('players', year)
+                .then(data => processPlayersStats(data));
+        }
+        else if (games.checked) {
+            getData('games', year)
+                .then(data => processGamesStats(data));
+        }
+        
+
+
+        console.log(year);
+    });
 });
 
 
