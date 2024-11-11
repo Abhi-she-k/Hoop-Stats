@@ -4,23 +4,24 @@ async function getInitData(year) {
     const url1 = "players/" + year;
     const url2 = "games/" + year;
 
-    try {
-        const response = await fetch(url1);
+    // try {
+    //     const response = await fetch(url1);
         
-        if (!response.ok) {
-          if (response.status === 500) {
-              alert('Failed to fetch data');
-          } else {
-            throw new Error(`HTTP error: ${response.status}`);
-          }
-        }
+    //     if (!response.ok) {
+    //       if (response.status === 500) {
+    //           alert('Failed to fetch data');
+    //       } else {
+    //         throw new Error(`HTTP error: ${response.status}`);
+    //       }
+    //     }
         
-        const data = await response.json();
-        processPlayersStats(data);
-    }
-    catch (error) {
-        console.error('Error:', error.message);
-      }
+    //     const data = await response.json();
+    //     console.log(data)
+    //     processPlayersStats(data);
+    // }
+    // catch (error) {
+    //     console.error('Error:', error.message);
+    //   }
 
     
     try {
@@ -33,8 +34,8 @@ async function getInitData(year) {
             throw new Error(`HTTP error: ${response.status}`);
           }
         }
-        
         const data = await response.json();
+        console.log(data)
         processGamesStats(data);
     }
     catch (error) {
@@ -69,20 +70,19 @@ async function getData(type, year) {
 async function processGamesStats(games) {
     let table = document.getElementById('games');
 
-    if (table.innerHTML != "") {
-        table.innerHTML = `
-            <tr id="tableHeader">
-                <th>Date</th>
-                <th>Visitor</th>
-                <th>Pts</th>
-                <th>Home</th>
-                <th>Pts</th>
-                <th>Boxscore</th>
-                <th>OT</th>
-                <th>Attendance</th>
-                <th>Arena</th>
-            </tr>`;
-    }
+
+    table.innerHTML = `
+        <tr id="tableHeader">
+            <th>Date</th>
+            <th>Visitor</th>
+            <th>Pts</th>
+            <th>Home</th>
+            <th>Pts</th>
+            <th>Boxscore</th>
+            <th>OT</th>
+            <th>Attendance</th>
+            <th>Arena</th>
+        </tr>`;
 
     for (let i = 0; i < games.length; i++) {
         let row = document.createElement('tr');
@@ -245,73 +245,73 @@ async function processPlayersStats(players) {
 
 document.addEventListener('DOMContentLoaded', function () {
     getInitData(2024);
-    var table1 = document.getElementById('players');
-    var table2 = document.getElementById('games');
+    // var table1 = document.getElementById('players');
+    // var table2 = document.getElementById('games');
 
-    table2.style.display = "none";
+    // table2.style.display = "none";
 
-    var animation1 = document.querySelectorAll('.fade-in-table')
+    // var animation1 = document.querySelectorAll('.fade-in-table')
 
-    animation1[0].style.display = 'block'; // Show the element
+    // animation1[0].style.display = 'block'; // Show the element
     
-    setTimeout(function () {
-        animation1[0].classList.add('show'); // Add class to trigger opacity transition
-    }, 2000); // Delay to ensure display change is applied first
+    // setTimeout(function () {
+    //     animation1[0].classList.add('show'); // Add class to trigger opacity transition
+    // }, 2000); // Delay to ensure display change is applied first
 
-    var players = document.getElementById('option1');
-    var games = document.getElementById('option2'); 
-    var player = document.getElementById('option3');
-    var game = document.getElementById('option4'); 
-    var random = document.getElementById('option5');
-    var other = document.getElementById('option6'); 
-    
-
+    // var players = document.getElementById('option1');
+    // var games = document.getElementById('option2'); 
+    // var player = document.getElementById('option3');
+    // var game = document.getElementById('option4'); 
+    // var random = document.getElementById('option5');
+    // var other = document.getElementById('option6'); 
     
 
-    // Event listener for when 'game' is clicked
-    games.addEventListener('click', function () {
+    
+
+    // // Event listener for when 'game' is clicked
+    // games.addEventListener('click', function () {
         
-        table1.style.display = "none"; // Hide table1 (players table)
-        animation1[0].classList.remove('show');
+    //     table1.style.display = "none"; // Hide table1 (players table)
+    //     animation1[0].classList.remove('show');
 
-        animation1[1].style.display = 'block'; // Show the element
-        setTimeout(function() {
-            animation1[1].classList.add('show'); // Add class to trigger opacity transition
-        }, 750); // Delay to ensure display change is applied first
-    });
+    //     animation1[1].style.display = 'block'; // Show the element
+    //     setTimeout(function() {
+    //         animation1[1].classList.add('show'); // Add class to trigger opacity transition
+    //     }, 750); // Delay to ensure display change is applied first
+    // });
 
-    players.addEventListener('click', function () {
+    // players.addEventListener('click', function () {
         
-        table2.style.display = "none"; // Hide table2 (games table)
-        animation1[1].classList.remove('show');
+    //     table2.style.display = "none"; // Hide table2 (games table)
+    //     animation1[1].classList.remove('show');
 
 
-        animation1[0].style.display = 'block'; // Show the element
-        setTimeout(function() {
-            animation1[0].classList.add('show'); // Add class to trigger opacity transition
-        }, 750); // Delay to ensure display change is applied first
-    });
+    //     animation1[0].style.display = 'block'; // Show the element
+    //     setTimeout(function() {
+    //         animation1[0].classList.add('show'); // Add class to trigger opacity transition
+    //     }, 750); // Delay to ensure display change is applied first
+    // });
 
-    var yearsubmit = document.getElementById('year-submit');
+    // var yearsubmit = document.getElementById('year-submit');
 
-    yearsubmit.addEventListener('click', function () {
-        var year = document.getElementById('year').value;
-        document.getElementById("yearForm").reset();
+    // yearsubmit.addEventListener('click', function () {
+    //     var year = document.getElementById('year').value;
+    //     document.getElementById("yearForm").reset();
         
  
-        if (players.checked) {
-            getData('players', year)
-                .then(data => processPlayersStats(data));
-        }
-        else if (games.checked) {
-            getData('games', year)
-                .then(data => processGamesStats(data));
-        }
+    //     if (players.checked) {
+    //         getData('players', year)
+    //             .then(data => processGamesStats(data));
+    //     }
+    //     else if (games.checked) {
+    //         getData('games', year)
+    //             .then(data => processGamesStats(data));
+    //     }
         
 
 
-        console.log(year);
-    });
+    //     console.log(year);
+    // });
 });
 
 

@@ -1,11 +1,14 @@
+from urllib.error import HTTPError
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import pandas as pd
+import requests
 
 import mysql.connector
 from sqlalchemy import create_engine
 import time
 
+import urllib3
 
 
 yearsNBA = ['2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013',
@@ -25,7 +28,7 @@ def NBAPlayerStats():
         print(year)
         extension = year + "_per_game.html"
         url = "https://www.basketball-reference.com/leagues/NBA_" + extension
-        html_content = urlopen(url).read()
+        html_content = requests.get(url).content
         time.sleep(5)
         soup = BeautifulSoup(html_content, 'html.parser')
         table = soup.find('table', id='per_game_stats')
@@ -59,9 +62,11 @@ def NBAPlayerStats():
         )
 
         mycursor = mydb.cursor()
+ 
+        cleanUp = f"DROP TABLE IF EXISTS season{year};"
 
         sql = f"""
-        CREATE TABLE Season{year} (
+        CREATE TABLE season{year} (
             ID INT AUTO_INCREMENT PRIMARY KEY,
             PLAYER VARCHAR(255),
             POS VARCHAR(255),
