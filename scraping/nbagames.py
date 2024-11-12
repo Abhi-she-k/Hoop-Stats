@@ -24,23 +24,20 @@ yearsNBA = ['2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '201
         '1964', '1963', '1962', '1961', '1960', '1959', '1958', '1957', '1956', '1955', '1954', '1953',
         '1952', '1951', '1950', '1949','1948','1947']
 
-
 if(curr_year not in yearsNBA):
     yearsNBA.insert(0,curr_year)
 
-# yearsNBA = ['2017']
-
 months = ['october', 'november', 'december', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september']
 
-yearsBAA = ['1949','1948','1947']
 
-print(yearsNBA)
+yearsBAA = ['1949','1948','1947']
 
 
 def NBAGameStats():
     for year in yearsNBA:
         year_games = []
         for month in months:
+            print("\n")
             print(year, month)
 
             if(year in yearsBAA):
@@ -69,13 +66,16 @@ def NBAGameStats():
                         cols = row.find_all('td')
                         if(len(cols) > 0):
                             for i in range(len(cols)):
-                                if(cols[i].getText() == 'Box Score'):
+                                if(cols[i].get('data-stat') == 'game_start_time'):
+                                    pass
+                                elif(cols[i].getText() == 'Box Score'):
                                     stats.append(cols[i].find('a')['href'])
                                 elif(cols[i].getText() == ''):
                                     stats.append('-')
-                                elif(cols[i].get('data-stat') != 'game_start_time'):
+                                else:
                                     stats.append(cols[i].getText())
                             year_games.append(stats)
+
                 except AttributeError:
                     print ("Games table could not be found")
             except HTTPError as e:
@@ -84,6 +84,10 @@ def NBAGameStats():
         df = pd.DataFrame(year_games, columns=table_headers)
 
         df = df.apply(pd.to_numeric, errors='ignore')
+
+
+        print(df.head(3))
+        print("\n\n")
 
         mydb = mysql.connector.connect(
             host="localhost",

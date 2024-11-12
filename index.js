@@ -5,13 +5,8 @@ const mysql = require('mysql2/promise');
 const app = express();
 const port = 3002;
 
-// var playerPool = mysql.createPool({
-//     host: "localhost",
-//     user: "root",
-//     port: "3306",
-//     password: "abhi12345",
-//     database: "player_stats"
-// });
+
+
 
 var gamePool = mysql.createPool({
     host: "localhost",
@@ -20,6 +15,8 @@ var gamePool = mysql.createPool({
     password: "abhi12345",
     database: "game_stats"
 });
+
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 
