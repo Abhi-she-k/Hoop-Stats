@@ -3,13 +3,16 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import pandas as pd
 import requests
+import datetime
 
 import mysql.connector
 from sqlalchemy import create_engine
 import time
 
-import urllib3
 
+
+curr_year = datetime.datetime.now()
+curr_year = str(curr_year.year)
 
 yearsNBA = ['2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013',
         '2012', '2011', '2010', '2009', '2008', '2007', '2006', '2005', '2004', '2003', '2002', '2001',
@@ -19,51 +22,56 @@ yearsNBA = ['2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '201
         '1964', '1963', '1962', '1961', '1960', '1959', '1958', '1957', '1956', '1955', '1954', '1953',
         '1952', '1951', '1950', '1949','1948','1947']
 
+if(curr_year not in yearsNBA):
+    yearsNBA.insert(0,curr_year)
+
 yearsBAA = ['1949','1948','1947']
 
 
 def NBAPlayerStats():
     for year in yearsNBA:
-        
+        print("\n")
         print(year)
 
         if(year in yearsBAA):
-            extension = "BAA_" + year + "_per_game.html"+".html"
+            extension = "BAA_" + year + "_per_game.html"
         else:
-            extension = "NBA_" + year + "_per_game.html"+".html"
-
-
-        extension = year + "_per_game.html"
-        url = "https://www.basketball-reference.com/leagues/NBA_" + extension
-        html_content = requests.get(url).content
-        time.sleep(5)
-        soup = BeautifulSoup(html_content, 'html.parser')
-        table = soup.find('table', id='per_game_stats')
-
-        table_headers = []
-        player_stats = []
+            extension = "NBA_" + year + "_per_game.html"
 
         try:
-            for th in table.find_all('tr', limit=1)[0].find_all('th')[1:]:
-                table_headers.append(th.getText())
+            url = "https://www.basketball-reference.com/leagues/" + extension
+            html_content = requests.get(url).content
+            print("HTML content fetched successfully")
+            time.sleep(5)
+            soup = BeautifulSoup(html_content, 'html.parser')
+            table = soup.find('table', id='per_game_stats')
+            
+            table_headers = []
+            player_stats = []
 
-            rows = table.find_all('tr')[1:]
+            try:
+                for th in table.find_all('tr', limit=1)[0].find_all('th')[1:]:
+                    table_headers.append(th.getText())
 
-            for row in rows:
-                cols = row.find_all('td')
-                if(len(cols) > 0):
-                    stats = [col.getText() for col in cols]
-                    player_stats.append(stats)
-        except AttributeError:
-                print ("Player table could not be found")
+                rows = table.find_all('tr')[1:]
 
-
+                for row in rows:
+                    cols = row.find_all('td')
+                    if(len(cols) > 0):
+                        stats = [col.getText() for col in cols]
+                        player_stats.append(stats)
+            except AttributeError:
+                    print ("Player table could not be found")
+        except HTTPError as e:
+            print("Error fetching html content. Skipping...")  
 
         df = pd.DataFrame(player_stats, columns=table_headers)
 
         df = df.apply(pd.to_numeric, errors='ignore')
 
         df_sorted = df.sort_values(by='PTS', ascending=False)
+
+        print(df.head(3))
 
         mydb = mysql.connector.connect(
             host="localhost",
@@ -77,40 +85,21 @@ def NBAPlayerStats():
  
         cleanUp = f"DROP TABLE IF EXISTS season{year};"
 
+
+        columns_sql = [f"`{headers}` VARCHAR(255)" for headers in table_headers]
+
+        # Join all columns into a formatted SQL string, separated by commas and newlines
+        columns_str = ",\n    ".join(columns_sql)
+
+        # Create the SQL query
         sql = f"""
         CREATE TABLE season{year} (
             ID INT AUTO_INCREMENT PRIMARY KEY,
-            PLAYER VARCHAR(255),
-            POS VARCHAR(255),
-            AGE VARCHAR(255),
-            TM VARCHAR(255),
-            G VARCHAR(255),
-            GS VARCHAR(255),
-            MP VARCHAR(255),
-            FG VARCHAR(255),
-            FGA VARCHAR(255),
-            `FG%` VARCHAR(255),
-            `3P` VARCHAR(255),
-            `3PA` VARCHAR(255),
-            `3P%` VARCHAR(255),
-            `2P` VARCHAR(255),
-            `2PA` VARCHAR(255),
-            `2P%` VARCHAR(255),
-            `eFG%` VARCHAR(255),
-            FT VARCHAR(255),
-            FTA VARCHAR(255),
-            `FT%` VARCHAR(255),
-            ORB VARCHAR(255),
-            DRB VARCHAR(255),
-            TRB VARCHAR(255),
-            AST VARCHAR(255),
-            STL VARCHAR(255),
-            BLK VARCHAR(255),
-            TOV VARCHAR(255),
-            PF VARCHAR(255),
-            PTS VARCHAR(255)
+            {columns_str}
         );
         """
+
+        mycursor.execute(cleanUp)
         mycursor.execute(sql)
 
         engine = create_engine("mysql+mysqlconnector://root:abhi12345@localhost/player_stats")

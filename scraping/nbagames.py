@@ -53,7 +53,6 @@ def NBAGameStats():
                 soup = BeautifulSoup(html_content, 'html.parser')
                 table = soup.find('table', id='schedule')
 
-
                 table_headers = ["DATE", "VISITOR", "VPTS", "HOME", "HPTS", "BOXSCORE", "OT", "ATT", "LOG", "ARENA", "NOTES"]
 
                 try:
@@ -100,20 +99,14 @@ def NBAGameStats():
 
         cleanUp = f"DROP TABLE IF EXISTS season{year};"
 
+        columns = (f"`{headers}` VARCHAR(255)" for headers in table_headers)
+        
+        columns_str = ",\n    ".join(columns)
+
         sql = f"""
         CREATE TABLE season{year} (
             ID INT AUTO_INCREMENT PRIMARY KEY,
-            DATE VARCHAR(255) NULL,
-            VISITOR VARCHAR(255) NULL,
-            VPTS VARCHAR(255) NULL,
-            HOME VARCHAR(255) NULL,
-            HPTS VARCHAR(255) NULL,
-            BOXSCORE VARCHAR(255) NULL,
-            OT VARCHAR(255) NULL,
-            ATT VARCHAR(255) NULL,
-            LOG VARCHAR(255) NULL,
-            ARENA VARCHAR(255) NULL,
-            NOTES VARCHAR(255) NULL
+            {columns_str}
         );
         """
 
