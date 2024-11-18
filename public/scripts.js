@@ -243,6 +243,7 @@ async function processPlayersStats(players) {
     }
 }
 
+
 document.addEventListener('DOMContentLoaded', function () {
     getInitData(2024);
     // var table1 = document.getElementById('players');
