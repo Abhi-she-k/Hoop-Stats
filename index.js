@@ -16,6 +16,14 @@ var gamePool = mysql.createPool({
     database: "game_stats"
 });
 
+var playerPool = mysql.createPool({
+    host: "localhost",
+    user: "root",
+    port: "3306",
+    password: "abhi12345",
+    database: "player_stats"
+});
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -28,19 +36,19 @@ app.listen(port, () => {
     console.log(`Server is running on port http://localhost:${port}`);
 })
 
-// // Endpoint for players
-// app.get('/players/:year', async (req, res) => {
-//     const sql = `SELECT * FROM season${req.params.year};`;
+// Endpoint for players
+app.get('/players/:year', async (req, res) => {
+    const sql = `SELECT * FROM season${req.params.year};`;
     
-//     try {
-//         const [rows] = await playerPool.query(sql);
-//         res.setHeader('Content-Type', 'application/json');
-//         res.send(JSON.stringify(rows, null, 2));
-//     } catch (err) {
-//         console.error('Error executing query:', err);
-//         res.status(500).json({ error: 'Failed to fetch data' });
-//     }
-// });
+    try {
+        const [rows] = await playerPool.query(sql);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(rows, null, 2));
+    } catch (err) {
+        console.error('Error executing query:', err);
+        res.status(500).json({ error: 'Failed to fetch data' });
+    }
+});
 
 // Endpoint for games
 app.get('/games/:year', async (req, res) => {

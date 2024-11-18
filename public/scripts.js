@@ -1,48 +1,3 @@
-async function getInitData(year) {
-    
-
-    const url1 = "players/" + year;
-    const url2 = "games/" + year;
-
-    // try {
-    //     const response = await fetch(url1);
-        
-    //     if (!response.ok) {
-    //       if (response.status === 500) {
-    //           alert('Failed to fetch data');
-    //       } else {
-    //         throw new Error(`HTTP error: ${response.status}`);
-    //       }
-    //     }
-        
-    //     const data = await response.json();
-    //     console.log(data)
-    //     processPlayersStats(data);
-    // }
-    // catch (error) {
-    //     console.error('Error:', error.message);
-    //   }
-
-    
-    try {
-        const response = await fetch(url2);
-        
-        if (!response.ok) {
-          if (response.status === 500) {
-              alert('Failed to fetch data');
-          } else {
-            throw new Error(`HTTP error: ${response.status}`);
-          }
-        }
-        const data = await response.json();
-        console.log(data)
-        processGamesStats(data);
-    }
-    catch (error) {
-        console.error('Error:', error.message);
-      }  
-}
-
 async function getData(type, year) {
     
     const url1 = type + '/' + year;
@@ -59,7 +14,14 @@ async function getData(type, year) {
         }
         
         const data = await response.json();
-        return data;
+
+        if(type == "players"){
+            processPlayersStats(data)
+        }
+        else{
+            processGamesStats(data)
+        }
+
     }
     catch (error) {
         console.error('Error:', error.message);
@@ -68,7 +30,7 @@ async function getData(type, year) {
 
 
 async function processGamesStats(games) {
-    let table = document.getElementById('games');
+    let table = document.getElementById('stats');
 
 
     table.innerHTML = `
@@ -84,6 +46,7 @@ async function processGamesStats(games) {
             <th>Arena</th>
         </tr>`;
 
+        
     for (let i = 0; i < games.length; i++) {
         let row = document.createElement('tr');
 
@@ -132,47 +95,49 @@ async function processGamesStats(games) {
 
         table.appendChild(row);
     }
+
 }
 
 
 
 async function processPlayersStats(players) {
-    let table = document.getElementById('players');
+    let table = document.getElementById('stats');
     
-    if (table.innerHTML != "") {
-        table.innerHTML = `
-            <tr id="tableHeader">
-                <th>Player</th>
-                <th>Position</th>
-                <th>Age</th>
-                <th>Team</th>
-                <th>Points</th>
-                <th>Rebounds</th>
-                <th>Assists</th>
-                <th>Steals</th>
-                <th>Blocks</th>
-                <th>FG%</th>
-                <th>3PT%</th>
-                <th>FT%</th>
-                <th>TOV</th>
-            </tr>`;
-    }
+    table.innerHTML = `
+        <tr id="tableHeader">
+            <th>Player</th>
+            <th>Position</th>
+            <th>Age</th>
+            <th>Team</th>
+            <th>Points</th>
+            <th>Rebounds</th>
+            <th>Assists</th>
+            <th>Steals</th>
+            <th>Blocks</th>
+            <th>FG%</th>
+            <th>3PT%</th>
+            <th>FT%</th>
+            <th>TOV</th>
+        </tr>`;
+
 
 
     for (let i = 0; i < players.length; i++) {
         let row = document.createElement('tr');
 
         let playerCell = document.createElement('td');
-        playerCell.innerText = players[i].PLAYER;
+        console.log(players[i].Player)
+        playerCell.innerText = players[i].Player;
+
 
         let posCell = document.createElement('td');
-        posCell.innerText = players[i].POS;
+        posCell.innerText = players[i].Pos;
 
         let ageCell = document.createElement('td');
-        ageCell.innerText = players[i].AGE;
+        ageCell.innerText = players[i].Age;
 
         let tmCell = document.createElement('td');
-        tmCell.innerText = players[i].TM;
+        tmCell.innerText = players[i].Team;
 
         let ptsCell = document.createElement('td');
         ptsCell.innerText = players[i].PTS;
@@ -245,7 +210,10 @@ async function processPlayersStats(players) {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    getInitData(2024);
+    const d = new Date();
+    let year = d.getFullYear();
+    
+    getData("players", year);
     // var table1 = document.getElementById('players');
     // var table2 = document.getElementById('games');
 

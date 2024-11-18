@@ -53,6 +53,52 @@ section {
     display: block;
 }
 
+/* ----------------------------------MY CSS---------------------------------- */
+
+#header{
+    opacity: 1;
+    animation-name: fadeinopacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 2s
+}
+
+#options{
+    opacity: 0;
+    animation-name: fadeinopacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 2s;
+    animation-delay: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+#yearForm, #stats{
+    opacity: 0;
+    animation-name: fadeinopacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 2s;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+}
+
+
+
+
+@keyframes fadeinopacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+  
+/* ----------------------------------END OF CSS---------------------------------- */
+
+
+
 body {
     font-family: Open Sans, sans-serif;
     font-size: 1rem;
@@ -312,42 +358,7 @@ h3,
     flex-grow: 1;
 }
 
-#header{
-    opacity: 1;
-    animation-name: fadeinopacity;
-    animation-iteration-count: 1;
-    animation-timing-function: ease-in;
-    animation-duration: 2s
-}
 
-#options{
-    opacity: 0;
-    animation-name: fadeinopacity;
-    animation-iteration-count: 1;
-    animation-timing-function: ease-in;
-    animation-duration: 2s;
-    animation-delay: 0.5s;
-    animation-fill-mode: forwards;
-}
-
-#yearText{
-    opacity: 0;
-    animation-name: fadeinopacity;
-    animation-iteration-count: 1;
-    animation-timing-function: ease-in;
-    animation-duration: 2s;
-    animation-delay: 1s;
-    animation-fill-mode: forwards;
-}
-
-@keyframes fadeinopacity {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
-}
 
 
 @media (min-width: 1200px) {
