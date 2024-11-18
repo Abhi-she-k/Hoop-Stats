@@ -13,40 +13,35 @@
 <header class=" jumbotron text-center align-items-center" id="header">
     <h1 class="container display-4 mt-5 align-items-center">Hoop Stats</h1>
     <p class="lead mt-3">Get the latest NBA stats and information</p>
+
+    <div class="container btn-group mt-5 d-flex flex-wrap justify-content-center" id="options">
+      <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked />
+      <label class="btn btn-default" for="option1">Get Players</label>
+      <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off" />
+      <label class="btn btn-default" for="option2">Get Games</label>
+      <input type="radio" class="btn-check" name="options" id="option3" autocomplete="off" />
+      <label class="btn btn-default" for="option3">Get Player</label>
+      <input type="radio" class="btn-check" name="options" id="option4" autocomplete="off" />
+      <label class="btn btn-default" for="option4">Get Game</label>
+      <input type="radio" class="btn-check" name="options" id="option5" autocomplete="off" />
+      <label class="btn btn-default" for="option5">Randomize</label>
+      <input type="radio" class="btn-check" name="options" id="option6" autocomplete="off" />
+      <label class="btn btn-default" for="option6">Other Stats</label>
+    </div>
+
+    <form class="form-inline" id="yearForm">
+      <input type="number" class="form-group mt-5 mb-5 col-6" id="year" placeholder="Enter Season (ex. 2024)">
+      <button type="button" id="year-submit" class="form-group btn-primary" onclick="">ENTER</button>
+    </form>
 </header>
 <body>
 
 
-  <div class="container mt-5 d-flex flex-row align-items-center" style="width: 100%;">
+  <div class="container mt-3 d-flex flex-row align-items-center" style="width: 100%;">
       <div>
-        <div class="head">
-          <header class=" jumbotron text-center align-items-center" id="header">
-
-          <div class="container btn-group mt-5 d-flex flex-wrap justify-content-center" id="options">
-            <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked />
-            <label class="btn btn-default" for="option1">Get Players</label>
-            <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off" />
-            <label class="btn btn-default" for="option2">Get Games</label>
-            <input type="radio" class="btn-check" name="options" id="option3" autocomplete="off" />
-            <label class="btn btn-default" for="option3">Get Player</label>
-            <input type="radio" class="btn-check" name="options" id="option4" autocomplete="off" />
-            <label class="btn btn-default" for="option4">Get Game</label>
-            <input type="radio" class="btn-check" name="options" id="option5" autocomplete="off" />
-            <label class="btn btn-default" for="option5">Randomize</label>
-            <input type="radio" class="btn-check" name="options" id="option6" autocomplete="off" />
-            <label class="btn btn-default" for="option6">Other Stats</label>
-          </div>
-        </div>
         <div class="container">
-
             <div class="row align-items-center">
-              <div class="col-12">
-                <form class="form-inline" id="yearForm">
-                  <input type="number" class="form-group mt-5 mb-5 col-6" id="year" placeholder="Enter Season (ex. 2024)">
-                  <button type="button" id="year-submit" class="form-group btn-primary" onclick="">ENTER</button>
-                </form>
                 <table id="players" class="table mx-auto">
-                 
                   <thead>
                       <tr id="tableHeader">
                           <th>Player</th>
