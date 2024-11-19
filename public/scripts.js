@@ -18,8 +18,11 @@ async function getData(type, year) {
         if(type == "players"){
             processPlayersStats(data)
         }
-        else{
+        else if(type == "games"){
             processGamesStats(data)
+        }
+        else{
+            processPlayersStats(data)
         }
 
     }
@@ -126,7 +129,6 @@ async function processPlayersStats(players) {
         let row = document.createElement('tr');
 
         let playerCell = document.createElement('td');
-        console.log(players[i].Player)
         playerCell.innerText = players[i].Player;
 
 
@@ -214,76 +216,36 @@ document.addEventListener('DOMContentLoaded', function () {
     let year = d.getFullYear();
     
     getData("players", year);
-    // var table1 = document.getElementById('players');
-    // var table2 = document.getElementById('games');
 
-    // table2.style.display = "none";
+    let games = document.getElementById('option2')
+    let players = document.getElementById('option1')
+    let player = document.getElementById('option3')
 
-    // var animation1 = document.querySelectorAll('.fade-in-table')
+    // Event listener for when 'game' is clicked
+    games.addEventListener('click', function () {
+        getData("games", year);
+    });
 
-    // animation1[0].style.display = 'block'; // Show the element
-    
-    // setTimeout(function () {
-    //     animation1[0].classList.add('show'); // Add class to trigger opacity transition
-    // }, 2000); // Delay to ensure display change is applied first
+    players.addEventListener('click', function () {
+        getData("players", year);
+    });
 
-    // var players = document.getElementById('option1');
-    // var games = document.getElementById('option2'); 
-    // var player = document.getElementById('option3');
-    // var game = document.getElementById('option4'); 
-    // var random = document.getElementById('option5');
-    // var other = document.getElementById('option6'); 
-    
+    player.addEventListener('click', function () {
+        getData("player/lebron", year);
+    });
 
-    
+    var yearsubmit = document.getElementById('year');
 
-    // // Event listener for when 'game' is clicked
-    // games.addEventListener('click', function () {
-        
-    //     table1.style.display = "none"; // Hide table1 (players table)
-    //     animation1[0].classList.remove('show');
-
-    //     animation1[1].style.display = 'block'; // Show the element
-    //     setTimeout(function() {
-    //         animation1[1].classList.add('show'); // Add class to trigger opacity transition
-    //     }, 750); // Delay to ensure display change is applied first
-    // });
-
-    // players.addEventListener('click', function () {
-        
-    //     table2.style.display = "none"; // Hide table2 (games table)
-    //     animation1[1].classList.remove('show');
-
-
-    //     animation1[0].style.display = 'block'; // Show the element
-    //     setTimeout(function() {
-    //         animation1[0].classList.add('show'); // Add class to trigger opacity transition
-    //     }, 750); // Delay to ensure display change is applied first
-    // });
-
-    // var yearsubmit = document.getElementById('year-submit');
-
-    // yearsubmit.addEventListener('click', function () {
-    //     var year = document.getElementById('year').value;
-    //     document.getElementById("yearForm").reset();
-        
- 
-    //     if (players.checked) {
-    //         getData('players', year)
-    //             .then(data => processGamesStats(data));
-    //     }
-    //     else if (games.checked) {
-    //         getData('games', year)
-    //             .then(data => processGamesStats(data));
-    //     }
-        
-
-
-    //     console.log(year);
-    // });
+    yearsubmit.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            console.log(yearsubmit.value)
+            let year = yearsubmit.value
+            // Check which checkbox is selected
+            if (players.checked) {
+                getData('players', year);
+            } else if (games.checked) {
+                getData('games', year);
+            }
+        }
+    });
 });
-
-
-
-
-

@@ -50,6 +50,20 @@ app.get('/players/:year', async (req, res) => {
     }
 });
 
+// Endpoint for player
+app.get('/player/:player/:year', async (req, res) => {
+    const sql = `SELECT * FROM season${req.params.year} WHERE Player LIKE '${req.params.player}%';`;
+    
+    try {
+        const [rows] = await playerPool.query(sql);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(rows, null, 2));
+    } catch (err) {
+        console.error('Error executing query:', err);
+        res.status(500).json({ error: 'Failed to fetch data' });
+    }
+});
+
 // Endpoint for games
 app.get('/games/:year', async (req, res) => {
     const sql = `SELECT * FROM season${req.params.year};`;
@@ -63,3 +77,4 @@ app.get('/games/:year', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch data' });
     }
 });
+
