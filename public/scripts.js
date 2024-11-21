@@ -5,13 +5,13 @@ async function getData(type, year) {
     try {
         const response = await fetch(url1);
         
-        if (!response.ok) {
-          if (response.status === 500) {
-              alert('Failed to fetch data');
-          } else {
-            throw new Error(`HTTP error: ${response.status}`);
-          }
-        }
+        // if (!response.ok) {
+        //   if (response.status === 500) {
+        //       alert('Failed to fetch data');
+        //   } else {
+        //     throw new Error(`HTTP error: ${response.status}`);
+        //   }
+        // }
         
         const data = await response.json();
 
