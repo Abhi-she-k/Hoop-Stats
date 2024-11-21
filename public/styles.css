@@ -83,9 +83,6 @@ section {
     animation-fill-mode: forwards;
 }
 
-
-
-
 @keyframes fadeinopacity {
 	0% {
 		opacity: 0;
@@ -93,6 +90,11 @@ section {
 	100% {
 		opacity: 1;
 	}
+}
+
+#stats th, #stats td {
+    min-width: 30px; /* Ensures columns are at least 100px wide */
+    max-width: 500px; /* Prevents columns from becoming too wide */
 }
   
 /* ----------------------------------END OF CSS---------------------------------- */

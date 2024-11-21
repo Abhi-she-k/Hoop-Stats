@@ -16,13 +16,13 @@ async function getData(type, year) {
         const data = await response.json();
 
         if(type == "players"){
-            processPlayersStats(data)
+            processPlayersStats(data, year)
         }
         else if(type == "games"){
-            processGamesStats(data)
+            processGamesStats(data, year)
         }
-        else{
-            processPlayersStats(data)
+        else if (type.startsWith("player/")){
+            processPlayersStats(data, year)
         }
 
     }
@@ -32,7 +32,7 @@ async function getData(type, year) {
 }
 
 
-async function processGamesStats(games) {
+async function processGamesStats(games, year) {
     let table = document.getElementById('stats');
 
 
@@ -104,111 +104,110 @@ async function processGamesStats(games) {
 
 
 async function processPlayersStats(players) {
+    
     let table = document.getElementById('stats');
     
-    table.innerHTML = `
-        <tr id="tableHeader">
-            <th>Player</th>
-            <th>Position</th>
-            <th>Age</th>
-            <th>Team</th>
-            <th>Points</th>
-            <th>Rebounds</th>
-            <th>Assists</th>
-            <th>Steals</th>
-            <th>Blocks</th>
-            <th>FG%</th>
-            <th>3PT%</th>
-            <th>FT%</th>
-            <th>TOV</th>
-        </tr>`;
+    const stats =['Player', 'Pos', 'Age', 'Team', 'PTS', 'TRB', 'AST', 'STL', 'BLK', 'FG%', '3P%', 'FT%', 'TOV'];
 
-
+    table.innerHTML = '';
+    
+    // Create the header row
+    let headerRow = document.createElement('tr');
+    
+    // Loop through the headers and create <th> elements
+    stats.forEach((stat) => {
+        let th = document.createElement('th');
+        th.innerText = stat;
+        headerRow.appendChild(th);
+    });
+    
+    // Append the header row to the table
+    table.appendChild(headerRow);
+    
 
     for (let i = 0; i < players.length; i++) {
+
         let row = document.createElement('tr');
 
-        let playerCell = document.createElement('td');
-        playerCell.innerText = players[i].Player;
 
+        row.onclick = function() {
+            advStats(players[i])
+        };
 
-        let posCell = document.createElement('td');
-        posCell.innerText = players[i].Pos;
+        stats.forEach((stat) => {
+            
+            let cell = document.createElement('td');
 
-        let ageCell = document.createElement('td');
-        ageCell.innerText = players[i].Age;
+            cell.innerText = players[i][stat]
 
-        let tmCell = document.createElement('td');
-        tmCell.innerText = players[i].Team;
+            if(players[i][stat] == null){
+                cell.innerText = ""
+            }
 
-        let ptsCell = document.createElement('td');
-        ptsCell.innerText = players[i].PTS;
-
-        let rebCell = document.createElement('td');
-        rebCell.innerText = players[i].TRB;
-
-        let astCell = document.createElement('td');
-        astCell.innerText = players[i].AST;
-
-        let stlCell = document.createElement('td');
-        stlCell.innerText = players[i].STL;
-
-        let blkCell = document.createElement('td');
-        blkCell.innerText = players[i].BLK;
-
-        let FieldPCell = document.createElement('td');
-        if (players[i]['FG%'] != null) {
-            FieldPCell.innerText = players[i]['FG%'];
-        }
-        else {
-            FieldPCell.innerText = "0.0";
-        }
-        
-
-        let ThreePCell = document.createElement('td');
-        if (players[i]['3P%'] != null) {
-            ThreePCell.innerText = players[i]['3P%'];
-        }
-        else {
-            ThreePCell.innerText = "0.0";
-        }
-        
-        let FTCell = document.createElement('td');
-        if (players[i]['FT%'] != null) {
-            FTCell.innerText = players[i]['FT%'];
-        }
-        else {
-            FTCell.innerText = "0.0";
-        }
-        
-        let TOVCell = document.createElement('td');
-        if (players[i].TOV != null) {
-            TOVCell.innerText = players[i].TOV;
-        }
-        else {
-            TOVCell.innerText = "0.0";
-        }
-
-        
-
-        row.appendChild(playerCell);
-        row.appendChild(posCell);
-        row.appendChild(ageCell);
-        row.appendChild(tmCell);
-        row.appendChild(ptsCell);
-        row.appendChild(rebCell);
-        row.appendChild(astCell);
-        row.appendChild(stlCell);
-        row.appendChild(blkCell);
-        row.appendChild(FieldPCell);
-        row.appendChild(ThreePCell);
-        row.appendChild(FTCell);
-        row.appendChild(TOVCell);
+            row.appendChild(cell)
+        });
 
 
         table.appendChild(row);
     }
 }
+
+async function advStats(player) {
+    
+    let table = document.getElementById('stats');
+    
+    const stats =['Player', 'Pos', 'Age', 'Team', 'PTS', 'TRB', 'AST', 'STL', 'BLK', 'FG%', '3P%', 'FT%', 'TOV'];
+    const advStats = ['G', 'GS', 'MP', 'FG', 'FGA', '3P', '3PA', '2P', '2P%', 'eFG%', 'FT', 'FTA', 'ORB', 'DRB', 'PF', 'Awards'];
+
+    
+    
+    table.innerHTML = '';
+    
+    // Create the header row
+    let headerRow = document.createElement('tr');
+    let headerRow2 = document.createElement('tr');
+
+    let row = document.createElement('tr');
+
+    // Loop through the headers and create <th> elements
+    stats.forEach((stat) => {
+        let th = document.createElement('th');
+        th.innerText = stat;
+        headerRow.appendChild(th);
+
+        let cell = document.createElement('td');
+        cell.innerText = player[stat]
+        if(player[stat] == null){
+            cell.innerText = ""
+        }
+        row.appendChild(cell)
+    });
+    table.appendChild(headerRow);
+    table.appendChild(row);
+
+    let row2 = document.createElement('tr');
+
+    advStats.forEach((adv)=>{
+        let th = document.createElement('th');
+        th.innerText = adv;
+        headerRow2.appendChild(th);
+
+        let cell = document.createElement('td');
+        cell.innerText = player[adv]
+        if(player[adv] == null){
+            cell.innerText = ""
+        }
+        row2.appendChild(cell)
+    })
+    
+    // Append the header row to the table
+    
+    table.appendChild(headerRow2);
+    table.appendChild(row2);
+    
+    
+}
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -217,35 +216,72 @@ document.addEventListener('DOMContentLoaded', function () {
     
     getData("players", year);
 
+    var textBox = document.getElementById('textBox');
+    var title = document.getElementById('title')
+
+    title.innerText = "Season: " + year + "-" + String((Number(year)-1))
+
     let games = document.getElementById('option2')
     let players = document.getElementById('option1')
     let player = document.getElementById('option3')
 
     // Event listener for when 'game' is clicked
     games.addEventListener('click', function () {
+        textBox.value = ""
+        title.innerText = "Season: " + year + "-" + String((Number(year)-1))
+        textBox.placeholder = 'Enter Season (ex. 2024)'
         getData("games", year);
     });
 
     players.addEventListener('click', function () {
+        textBox.value = ""
+        title.innerText = "Season: " + year + "-" + String((Number(year)-1))
+        textBox.placeholder = 'Enter Season (ex. 2024)'
         getData("players", year);
     });
 
     player.addEventListener('click', function () {
+        textBox.value = ""
+        title.innerText = "Season Stats: " + year + "-" + String((Number(year)-1))
+        textBox.placeholder = 'Enter "Player, Season" (ex. LeBron, 2014)'
         getData("player/lebron", year);
     });
 
-    var yearsubmit = document.getElementById('year');
+    
 
-    yearsubmit.addEventListener('keypress', function (event) {
+    textBox.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
-            console.log(yearsubmit.value)
-            let year = yearsubmit.value
+            console.log(textBox.value)
+            let year = textBox.value
             // Check which checkbox is selected
             if (players.checked) {
+                let year = textBox.value
+                title.innerText = "Season: " + year + "-" + String((Number(year)-1))
                 getData('players', year);
-            } else if (games.checked) {
+            } 
+            else if (games.checked) {
+                let year = textBox.value
+                title.innerText = "Season: " + year + "-" + String((Number(year)-1))
                 getData('games', year);
             }
+            else if (player.checked){
+                let data = textBox.value
+                
+                data = data.split(",")
+                console.log(data)
+
+                if(data[1] === undefined){
+                    title.innerText = "Season Stats: " + String(d.getFullYear()) + "-" + String(Number(d.getFullYear()-1))
+                    getData('player/' + data[0], d.getFullYear())
+                }
+                else{
+                    date = data[1].replace(/\s+/g, "")   
+                    title.innerText = "Season Stats: " + date + "-" + String((Number(date)-1))
+                    getData('player/' + data[0], date)
+                }
+                
+            }
+
         }
     });
 });

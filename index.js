@@ -3,7 +3,7 @@ const path = require('path');
 const mysql = require('mysql2/promise');
 
 const app = express();
-const port = 3002;
+const port = 3004;
 
 
 
@@ -52,7 +52,8 @@ app.get('/players/:year', async (req, res) => {
 
 // Endpoint for player
 app.get('/player/:player/:year', async (req, res) => {
-    const sql = `SELECT * FROM season${req.params.year} WHERE Player LIKE '${req.params.player}%';`;
+
+    const sql = `SELECT * FROM season${req.params.year} WHERE Player LIKE '%${req.params.player}%';`;
     
     try {
         const [rows] = await playerPool.query(sql);
@@ -66,6 +67,9 @@ app.get('/player/:player/:year', async (req, res) => {
 
 // Endpoint for games
 app.get('/games/:year', async (req, res) => {
+
+    
+
     const sql = `SELECT * FROM season${req.params.year};`;
     
     try {

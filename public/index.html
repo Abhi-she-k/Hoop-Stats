@@ -22,7 +22,7 @@
       <input type="radio" class="btn-check" name="options" id="option3" autocomplete="off" />
       <label class="btn btn-default" for="option3">Get Player</label>
       <input type="radio" class="btn-check" name="options" id="option4" autocomplete="off" />
-      <label class="btn btn-default" for="option4">Get Game</label>
+      <label class="btn btn-default" for="option4">Compare</label>
       <input type="radio" class="btn-check" name="options" id="option5" autocomplete="off" />
       <label class="btn btn-default" for="option5">Randomize</label>
       <input type="radio" class="btn-check" name="options" id="option6" autocomplete="off" />
@@ -30,12 +30,15 @@
     </div>
 
     
-    <input type="number" class="form-group mt-5 mb-5 col-6" id="year" placeholder="Enter Season (ex. 2024)">
+    <input class="form-group mt-5 mb-5 col-6" id="textBox" placeholder="Enter Season (ex. 2024)">
+
+    <h4 class="lead" id = "title"></h4>
 </header>
 <body>
 
 
-  <div class="container mt-3 d-flex flex-row align-items-center" style="width: 100%;">
+
+  <div id= "statSec" class="container mt-5 d-flex flex-row align-items-center" style="width: 100%;">
                   
       <table id="stats" class="table mx-auto">
         <thead>
