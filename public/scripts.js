@@ -211,10 +211,10 @@ async function advStats(player) {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    // const d = new Date();
-    // let year = d.getFullYear();
+    const d = new Date();
+    let year = d.getFullYear();
     
-    // getData("players", year);
+    getData("players", year);
 
     var textBox = document.getElementById('textBox');
     var title = document.getElementById('title')

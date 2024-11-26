@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 const mysql = require('mysql2/promise');
+const fs = require('fs');
+
 
 const app = express();
 const port = 3004;
@@ -9,19 +11,25 @@ const port = 3004;
 
 
 var gamePool = mysql.createPool({
-    host: "localhost",
-    user: "root",
+    host: "hoopstatsdb.mysql.database.azure.com",
+    user: "hoopstatsadmin",
     port: "3306",
-    password: "abhi12345",
-    database: "game_stats"
+    password: "strongaura1407#",
+    database: "game_stats",
+    ssl: {
+        ca: fs.readFileSync("/Users/abhishekpaul/Downloads/DigiCertGlobalRootCA.crt.pem") // Load the certificate file
+    }
 });
 
 var playerPool = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    port: "3306",
-    password: "abhi12345",
-    database: "player_stats"
+    host: "hoopstatsdb.mysql.database.azure.com",
+    user: "hoopstatsadmin",
+    port: 3306,  // port should be a number, not a string
+    password: "strongaura1407#",
+    database: "player_stats",
+    ssl: {
+        ca: fs.readFileSync("/Users/abhishekpaul/Downloads/DigiCertGlobalRootCA.crt.pem") // Load the certificate file
+    }
 });
 
 
