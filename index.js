@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const mysql = require('mysql2/promise');
 const fs = require('fs');
+require('dotenv').config();
 
 
 const app = express();
@@ -17,7 +18,7 @@ var gamePool = mysql.createPool({
     password: "strongaura1407#",
     database: "game_stats",
     ssl: {
-        ca: fs.readFileSync("/Users/abhishekpaul/Downloads/DigiCertGlobalRootCA.crt.pem") // Load the certificate file
+        ca: process.env.SSL_CERT_CONTENT 
     }
 });
 
@@ -28,7 +29,7 @@ var playerPool = mysql.createPool({
     password: "strongaura1407#",
     database: "player_stats",
     ssl: {
-        ca: fs.readFileSync("/Users/abhishekpaul/Downloads/DigiCertGlobalRootCA.crt.pem") // Load the certificate file
+        ca: process.env.SSL_CERT_CONTENT 
     }
 });
 
