@@ -25,7 +25,7 @@ var gamePool = mysql.createPool({
 var playerPool = mysql.createPool({
     host: "hoopstatsdb.mysql.database.azure.com",
     user: "hoopstatsadmin",
-    port: 3306,  // port should be a number, not a string
+    port: 3306,
     password: "strongaura1407#",
     database: "player_stats",
     ssl: {
