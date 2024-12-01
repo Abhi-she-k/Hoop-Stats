@@ -4,7 +4,7 @@ trigger:
       - main  # Trigger on changes to the main branch
 
 pool:
-  vmImage: 'Default'  # Use a Linux build agent
+  name: 'Default'  # Use a Linux build agent
 
 variables:
   dockerRegistryServiceConnection: 'HoopStats'  # Docker Hub service connection
