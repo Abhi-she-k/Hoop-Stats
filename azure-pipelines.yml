@@ -12,15 +12,22 @@ variables:
   imageTag: '1.1'  # Combine version with the build ID for tagging
 
 steps:
-# Step to build and push Docker image to Docker Hub
+# Log in to Docker Hub
 - task: Docker@2
-  displayName: 'Build and Push Docker Image'
+  displayName: 'Log in to Docker Hub'
   inputs:
-    containerRegistry: $(dockerRegistryServiceConnection)  # Docker Hub service connection
-    repository: $(imageName)  # Docker Hub repository name (e.g., 'abhishek1231/hoopstats')
-    command: buildAndPush  # Command to build and push the Docker image
-    Dockerfile: '**/Dockerfile'  # Path to Dockerfile in the repository
-    tags: |
-      $(imageTag)
+    containerRegistry: $(dockerRegistryServiceConnection)
 
- 
+# Set up Docker Buildx
+- script: |
+    docker buildx create --use --name multi-builder
+    docker buildx inspect --bootstrap
+  displayName: 'Set up Docker Buildx'
+
+# Build and Push Multi-Platform Docker Image
+- script: |
+    docker buildx build \
+      --platform linux/amd64,linux/arm64 \
+      -t $(imageName):$(imageTag) \
+      --push .
+  displayName: 'Build and Push Multi-Platform Docker Image'
