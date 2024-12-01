@@ -23,4 +23,10 @@ steps:
     tags: |
       $(imageTag)
     buildArguments: '--platform linux/amd64'
+  
+services:
+  myservice:
+    platform: linux/amd64
+  myotherservice:
+    platform: linux/amd64
  
