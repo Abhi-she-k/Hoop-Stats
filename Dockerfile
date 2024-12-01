@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:16
+FROM node:16
 
 EXPOSE 3004
 
@@ -10,4 +10,5 @@ RUN npm install
 
 COPY . .
     
-CMD
+CMD ["node", "index.js"]
+
