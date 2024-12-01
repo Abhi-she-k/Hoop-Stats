@@ -1,0 +1,24 @@
+trigger:
+  branches:
+    include:
+      - main  # Trigger on changes to the main branch
+
+pool:
+  vmImage: 'Default'  # Use a Linux build agent
+
+variables:
+  dockerRegistryServiceConnection: 'HoopStats'  # Docker Hub service connection
+  imageName: 'abhishek1231/hoopstats'  # Docker Hub repository name (without version/tag)
+  imageTag: '1.1'  # Static version tag
+
+steps:
+# Step to build and push Docker image to Docker Hub
+- task: Docker@2
+  displayName: 'Build and Push Docker Image'
+  inputs:
+    containerRegistry: $(dockerRegistryServiceConnection)  # Docker Hub service connection
+    repository: $(imageName)  # Docker Hub repository name (e.g., 'abhishek1231/hoopstats')
+    command: buildAndPush  # Command to build and push the Docker image
+    Dockerfile: '**/Dockerfile'  # Path to Dockerfile in the repository
+    tags: |
+      $(imageTag)  # Tag the image with '1.1'
