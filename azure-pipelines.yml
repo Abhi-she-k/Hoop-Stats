@@ -4,12 +4,12 @@ trigger:
       - main  # Trigger on changes to the main branch
 
 pool:
-  name: 'Default'  # Use a Linux build agent
+  name: 'Default'
 
 variables:
-  dockerRegistryServiceConnection: 'HoopStats'  # Docker Hub service connection
+  dockerRegistryServiceConnection: 'HoopStats'  # Replace with your Docker Hub service connection name
   imageName: 'abhishek1231/hoopstats'  # Docker Hub repository name (without version/tag)
-  imageTag: '1.1'  # Static version tag
+  imageTag: '1.1'  # Combine version with the build ID for tagging
 
 steps:
 # Step to build and push Docker image to Docker Hub
@@ -21,4 +21,5 @@ steps:
     command: buildAndPush  # Command to build and push the Docker image
     Dockerfile: '**/Dockerfile'  # Path to Dockerfile in the repository
     tags: |
-      $(imageTag)  # Tag the image with '1.1'
+      $(imageTag)
+ 
