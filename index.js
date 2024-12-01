@@ -17,9 +17,9 @@ var gamePool = mysql.createPool({
     port: 3306,
     password: "strongaura1407#",
     database: "game_stats",
-    ssl: {
-        ca: process.env.SSL_CERT_CONTENT 
-    }
+    // ssl: {
+    //     rejectUnauthorized: false
+    // }
 });
 
 var playerPool = mysql.createPool({
@@ -28,9 +28,9 @@ var playerPool = mysql.createPool({
     port: 3306,
     password: "strongaura1407#",
     database: "player_stats",
-    ssl: {
-        ca: process.env.SSL_CERT_CONTENT 
-    }
+    // ssl: {
+    //     rejectUnauthorized: false
+    // }
 });
 
 
