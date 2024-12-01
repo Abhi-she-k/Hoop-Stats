@@ -22,4 +22,5 @@ steps:
     Dockerfile: '**/Dockerfile'  # Path to Dockerfile in the repository
     tags: |
       $(imageTag)
+    buildArguments: '--platform linux/amd64'
  
