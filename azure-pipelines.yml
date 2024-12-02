@@ -4,35 +4,41 @@ trigger:
       - main  # Trigger on changes to the main branch
 
 pool:
-  name: 'Default'  # Use the default Azure pipeline agent
+  name: 'Default'  # Ensure you're using an agent that has Docker installed
 
 variables:
-  dockerRegistryServiceConnection: 'HoopStats'  
-  imageName: 'abhishek1231/hoopstats'  
-  imageTag: '1.1'  
+  dockerRegistryServiceConnection: 'HoopStats'  # Docker Hub service connection
+  imageName: 'abhishek1231/hoopstats'  # Docker Hub repository
+  imageTag: '1.1'  # Tag for the Docker image
 
 steps:
+# Step to log in to Docker Hub
 - task: Docker@2
   displayName: 'Log in to Docker Hub'
   inputs:
     containerRegistry: $(dockerRegistryServiceConnection)
 
+# Step to check Docker availability (optional, for debugging)
 - script: |
-    docker system prune -af
-  displayName: 'Clean up Docker system'
+    docker --version
+    docker info
+  displayName: 'Check Docker Version and Info'
 
+# Step to set up Docker Buildx
 - script: |
-    docker buildx create --use --name multi-builder  # Create and use a new builder instance
-    docker buildx inspect --bootstrap  # Ensure BuildKit is available
+    docker buildx create --use --name multi-builder
+    docker buildx inspect --bootstrap
   displayName: 'Set up Docker Buildx'
 
+# Step to build and push the Docker image with Buildx
 - script: |
     docker buildx build \
       --platform linux/amd64,linux/arm64 \
       -t $(imageName):$(imageTag) \
-      --push .  
+      --push .
   displayName: 'Build and Push Multi-Platform Docker Image'
 
+# Optional cleanup (if necessary)
 - script: |
     docker system prune -af
   displayName: 'Clean up Docker system after build'
