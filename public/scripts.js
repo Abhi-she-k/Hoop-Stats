@@ -2,7 +2,7 @@ const history = new Map();
 
 const playerStats = ['Player', 'Pos', 'Age', 'Team', 'PTS', 'TRB', 'AST', 'STL', 'BLK', 'FG%', '3P%', 'FT%', 'TOV'];
 const advStats = ['G', 'GS', 'MP', 'FG', 'FGA', '3P', '3PA', '2P', '2P%', 'eFG%', 'FT', 'FTA', 'ORB', 'DRB', 'PF', 'Awards'];
-const gameStats = ['DATE', 'VISITOR', 'VPTS', 'HOME', 'HPTS','BOXSCORE', 'OT', 'ATTENDANCE', 'LOG','ARENA']
+const gameStats = ['DATE', 'VISITOR', 'VPTS', 'HOME', 'HPTS','BOXSCORE', 'OT', 'ATT', 'LOG']
 
 
 document.addEventListener('DOMContentLoaded', function () {
