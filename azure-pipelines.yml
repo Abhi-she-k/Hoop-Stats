@@ -31,7 +31,7 @@ steps:
 
 - task: AzureCLI@2
   inputs:
-    azureSubscription: 'f383007c-3052-4645-9142-e1c163d1b932'
+    azureSubscription: 'Azure for Students'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
@@ -43,7 +43,7 @@ steps:
 
 - task: AzureCLI@2
   inputs:
-    azureSubscription: 'f383007c-3052-4645-9142-e1c163d1b932'
+    azureSubscription: 'Azure for Students'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
