@@ -1,38 +1,38 @@
 trigger:
   branches:
     include:
-      - main  
+      - main  # Trigger on changes to the main branch
 
 pool:
-  name: 'Default'
+  name: 'Default'  # Use the default Azure pipeline agent
 
 variables:
   dockerRegistryServiceConnection: 'HoopStats'  
-  imageName: 'abhishek1231/hoopstats' 
-  imageTag: '1.1' 
-
- 
+  imageName: 'abhishek1231/hoopstats'  
+  imageTag: '1.1'  
 
 steps:
-
-- script: |
-    docker system prune -af
-  displayName: 'Clean up Docker system after build'
-  
 - task: Docker@2
   displayName: 'Log in to Docker Hub'
   inputs:
     containerRegistry: $(dockerRegistryServiceConnection)
 
 - script: |
-    docker buildx create --use --name multi-builder
-    docker buildx inspect --bootstrap
+    docker system prune -af
+  displayName: 'Clean up Docker system'
+
+- script: |
+    docker buildx create --use --name multi-builder  # Create and use a new builder instance
+    docker buildx inspect --bootstrap  # Ensure BuildKit is available
   displayName: 'Set up Docker Buildx'
 
 - script: |
     docker buildx build \
       --platform linux/amd64,linux/arm64 \
       -t $(imageName):$(imageTag) \
-      --push .
+      --push .  
   displayName: 'Build and Push Multi-Platform Docker Image'
 
+- script: |
+    docker system prune -af
+  displayName: 'Clean up Docker system after build'
