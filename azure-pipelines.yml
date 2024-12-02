@@ -28,3 +28,25 @@ steps:
       -t $(imageName):$(imageTag) \
       --push .
   displayName: 'Build and Push Multi-Platform Docker Image'
+
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'f383007c-3052-4645-9142-e1c163d1b932'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      echo "Stopping App Service..."
+      az webapp stop --name HoopStats --resource-group HoopStats
+
+- script: echo "Deploying application..."
+  displayName: 'Deploy Application'
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'f383007c-3052-4645-9142-e1c163d1b932'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      echo "Starting App Service..."
+      az webapp start --name HoopStats --resource-group HoopStats
