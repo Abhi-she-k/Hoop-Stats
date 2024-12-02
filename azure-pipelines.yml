@@ -9,9 +9,16 @@ pool:
 variables:
   dockerRegistryServiceConnection: 'HoopStats'  
   imageName: 'abhishek1231/hoopstats' 
-  imageTag: '1.1'  
+  imageTag: '1.1' 
+
+ 
 
 steps:
+
+- script: |
+    docker system prune -af
+  displayName: 'Clean up Docker system after build'
+  
 - task: Docker@2
   displayName: 'Log in to Docker Hub'
   inputs:
