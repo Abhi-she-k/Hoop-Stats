@@ -7,7 +7,7 @@ pool:
   name: 'Default'  # Ensure you're using an agent that has Docker installed
 
 variables:
-  dockerRegistryServiceConnection: 'HoopStatsPipline'  # Docker Hub service connection
+  dockerRegistryServiceConnection: 'HoopStats'  # Docker Hub service connection
   imageName: 'abhishek1231/hoopstats'  # Docker Hub repository
   imageTag: '1.1'  # Tag for the Docker image
 
@@ -30,5 +30,6 @@ steps:
     docker buildx build \
       --platform linux/amd64,linux/arm64 \
       -t $(imageName):$(imageTag) \
-      --push .
+      --push \
+      .
   displayName: 'Build and Push Multi-Platform Docker Image'
