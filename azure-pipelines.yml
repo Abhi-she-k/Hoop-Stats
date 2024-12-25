@@ -6,20 +6,15 @@ trigger:
 pool:
   name: 'Default'
 
-variables:
-  dockerRegistryServiceConnection: 'HoopStats'  # Replace with your Docker Hub service connection name
-  imageName: 'abhishek1231/hoopstats'  # Docker Hub repository name (without version/tag)
-  imageTag: '1.1'  # Combine version with the build ID for tagging
-
 steps:
 # Step to build and push Docker image to Docker Hub
 - task: Docker@2
   displayName: 'Build and Push Docker Image'
   inputs:
-    containerRegistry: $(dockerRegistryServiceConnection)  # Docker Hub service connection
-    repository: $(imageName)  # Docker Hub repository name (e.g., 'abhishek1231/hoopstats')
+    containerRegistry: 'DockerConnection'  # Docker Hub service connection
+    repository: 'abhishek1231/hoopstats'  # Docker Hub repository name (e.g., 'abhishek1231/hoopstats')
     command: buildAndPush  # Command to build and push the Docker image
     Dockerfile: '**/Dockerfile'  # Path to Dockerfile in the repository
     tags: |
-      $(imageTag)
+      '1.1'
  
