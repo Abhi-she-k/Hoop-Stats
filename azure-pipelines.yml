@@ -16,5 +16,5 @@ steps:
     command: buildAndPush  # Command to build and push the Docker image
     Dockerfile: '**/Dockerfile'  # Path to Dockerfile in the repository
     tags: |
-      '1.1'
+      1.1
  
