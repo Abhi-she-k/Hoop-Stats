@@ -4,17 +4,41 @@ trigger:
       - main  # Trigger on changes to the main branch
 
 pool:
-  name: 'Default'
+  name: 'Default'  # Ensure you're using an agent that has Docker installed
+
+variables:
+  dockerRegistryServiceConnection: 'DockerConnection'  # Docker Hub service connection
+  imageName: 'abhishek1231/hoopstats'  # Docker Hub repository
+  imageTag: '1.1'  # Tag for the Docker image
 
 steps:
-# Step to build and push Docker image to Docker Hub
+# Step to log in to Docker Hub
 - task: Docker@2
-  displayName: 'Build and Push Docker Image'
+  displayName: 'Log in to Docker Hub'
   inputs:
-    containerRegistry: 'DockerConnection'  # Docker Hub service connection
-    repository: 'abhishek1231/hoopstats'  # Docker Hub repository name (e.g., 'abhishek1231/hoopstats')
-    command: buildAndPush  # Command to build and push the Docker image
-    Dockerfile: '**/Dockerfile'  # Path to Dockerfile in the repository
-    tags: |
-      1.1
- 
+    containerRegistry: $(dockerRegistryServiceConnection)
+
+# Step to check Docker availability (optional, for debugging)
+- script: |
+    docker --version
+    docker info
+  displayName: 'Check Docker Version and Info'
+
+# Step to set up Docker Buildx
+- script: |
+    docker buildx create --use --name multi-builder
+    docker buildx inspect --bootstrap
+  displayName: 'Set up Docker Buildx'
+
+# Step to build and push the Docker image with Buildx
+- script: |
+    docker buildx build \
+      --platform linux/amd64,linux/arm64 \
+      -t $(imageName):$(imageTag) \
+      --push .
+  displayName: 'Build and Push Multi-Platform Docker Image'
+
+# Optional cleanup (if necessary)
+- script: |
+    docker system prune -af
+  displayName: 'Clean up Docker system after build'
