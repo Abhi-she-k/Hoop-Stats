@@ -7,7 +7,7 @@ pool:
   name: 'Default'  # Ensure you're using an agent that has Docker installed
 
 variables:
-  dockerRegistryServiceConnection: 'dockerconn'  # Docker Hub service connection
+  dockerRegistryServiceConnection: 'DockerConnection1'  # Docker Hub service connection
   imageName: 'abhishek1231/hoopstats'  # Docker Hub repository
   imageTag: '1.1'  # Tag for the Docker image
 
@@ -26,20 +26,27 @@ steps:
 
 # Step to set up Docker Buildx
 - script: |
-    export DOCKER_BUILDKIT=1
     docker buildx create --use --name multi-builder
     docker buildx inspect --bootstrap
-  displayName: 'Set up Docker Buildx with BuildKit'
+  displayName: 'Set up Docker Buildx'
 
 # Step to build and push the Docker image with Buildx
 - script: |
     docker buildx build \
       --platform linux/amd64,linux/arm64 \
-      -t $(imageName):$(imageTag) \
+      -t abhishek1231/hoopstats:1.1 \
       --push .
   displayName: 'Build and Push Multi-Platform Docker Image'
 
-# Optional cleanup (if necessary)
 - script: |
     docker system prune -af
   displayName: 'Clean up Docker system after build'
+
+# Deploy to Azure App Service
+- task: AzureWebAppContainer@1
+  inputs:
+    azureSubscription: 'SystemAssignedConnection'
+    appName: 'HoopStats'
+    containers: 'abhishek1231/hoopstats:1.1'
+
+
