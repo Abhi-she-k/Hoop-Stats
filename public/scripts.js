@@ -5,85 +5,142 @@ const advStats = ['G', 'GS', 'MP', 'FG', 'FGA', '3P', '3PA', '2P', '2P%', 'eFG%'
 const gameStats = ['DATE', 'VISITOR', 'VPTS', 'HOME', 'HPTS','BOXSCORE', 'OT', 'ATT', 'LOG']
 
 
+const textBox = document.getElementById('textBox');
+const textBox2 = document.getElementById('textBox2');
+const filter = document.getElementById('filter');
+const title = document.getElementById('title');
+const title2 = document.getElementById('title2');
+const stats2 = document.getElementById('stats2');
+
+const players = document.getElementById('option1');
+const games = document.getElementById('option2');
+const player = document.getElementById('option3');
+const compare = document.getElementById('option4');
+
+
 document.addEventListener('DOMContentLoaded', function () {
-        
     const d = new Date();
-    let year = d.getFullYear();
-    
+    const year = d.getFullYear();
+
+    cleanUP();
     getData("players", year);
+    updateTitleAndPlaceholder(title, year, 'Enter Season (ex. 2024)');
 
-    var textBox = document.getElementById('textBox');
-    var title = document.getElementById('title')
-
-    title.innerText = "Season: " + year + "-" + String((Number(year)-1))
-
-    let games = document.getElementById('option2')
-    let players = document.getElementById('option1')
-    let player = document.getElementById('option3')
-
-    // Event listener for when 'game' is clicked
+    // Event listener for 'games' option
     games.addEventListener('click', function () {
-        textBox.value = ""
-        title.innerText = "Season: " + year + "-" + String((Number(year)-1))
-        textBox.placeholder = 'Enter Season (ex. 2024)'
-        getData("games", year);
+        cleanUP();
+        updateTitleAndPlaceholder(title, year, 'Enter Season (ex. 2024)');
+        getData("games", year, 1);
     });
 
+    // Event listener for 'players' option
     players.addEventListener('click', function () {
-        textBox.value = ""
-        title.innerText = "Season: " + year + "-" + String((Number(year)-1))
-        textBox.placeholder = 'Enter Season (ex. 2024)'
-        getData("players", year);
+        cleanUP();
+        updateTitleAndPlaceholder(title, year, 'Enter Season (ex. 2024)');
+        getData("players", year, 1);
     });
 
+    // Event listener for 'player' option
     player.addEventListener('click', function () {
-        textBox.value = ""
-        title.innerText = "Season Stats: " + year + "-" + String((Number(year)-1))
-        textBox.placeholder = 'Enter "Player, Season" (ex. LeBron, 2014)'
-        getData("player/lebron", year);
+        cleanUP();
+        filter.style.display = "none";
+        updateTitleAndPlaceholder(title, year, 'Enter "Player, Season" (ex. LeBron, 2014)');
+        getData("player/lebron", year, 1);
     });
 
-    
+    // Event listener for 'compare' option
+    compare.addEventListener('click', function () {
+        cleanUP();
+        filter.style.display = "none";
+        textBox2.style.display = "";
+        title2.style.display = "";
+        stats2.style.display = "";
 
+        updateTitleAndPlaceholder(title, year, 'Enter "Player, Season" (ex. LeBron, 2014)');
+        textBox.placeholder = 'Enter "Player, Season" (ex. LeBron, 2014)';
+        getData("player/lebron", year, 1);
+
+        title2.innerText = "Season Stats: 1996-1995";
+        getData("player/michael jordan", 1995, 2);
+    });
+
+    // Event listener for textBox input
     textBox.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
-            console.log(textBox.value)
-            let year = textBox.value
-            // Check which checkbox is selected
-            if (players.checked) {
-                let year = textBox.value
-                title.innerText = "Season: " + year + "-" + String((Number(year)-1))
-                getData('players', year);
-            } 
-            else if (games.checked) {
-                let year = textBox.value
-                title.innerText = "Season: " + year + "-" + String((Number(year)-1))
-                getData('games', year);
-            }
-            else if (player.checked){
-                let data = textBox.value
-                
-                data = data.split(",")
-                console.log(data)
-
-                if(data[1] === undefined){
-                    title.innerText = "Season Stats: " + String(d.getFullYear()) + "-" + String(Number(d.getFullYear()-1))
-                    getData('player/' + data[0], d.getFullYear())
-                }
-                else{
-                    date = data[1].replace(/\s+/g, "")   
-                    title.innerText = "Season Stats: " + date + "-" + String((Number(date)-1))
-                    getData('player/' + data[0], date)
-                }
-                
-            }
-
+            handleTextBoxInput(textBox, title, year);
         }
+    });
+
+    // Event listener for textBox2 input
+    textBox2.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            handleTextBox2Input(textBox2, title2, year);
+        }
+    });
+
+    // Event listener for filter input
+    filter.addEventListener('keydown', function (event) {
+        filterTableRows(filter.value.toLowerCase());
+
     });
 });
 
+function cleanUP() {
 
-async function getData(type, year) {
+    // Check if elements exist before modifying them
+    if (textBox) textBox.value = "";
+    if (filter) filter.style.display = "";
+    if (textBox2) textBox2.style.display = "none";
+    if (title2) title2.style.display = "none";
+    if (stats2) stats2.style.display = "none";
+}
+
+function updateTitleAndPlaceholder(titleElement, year, placeholderText) {
+    titleElement.innerText = `Season: ${year}-${Number(year) - 1}`;
+    const textBox = document.getElementById('textBox');
+    textBox.placeholder = placeholderText;
+}
+
+function handleTextBoxInput(textBox, title, year) {
+    const value = textBox.value;
+    const [playerName, season] = value.split(',').map(item => item.trim());
+
+    if (!season) {
+        title.innerText = `Season Stats: ${year}-${Number(year) - 1}`;
+        getData(`player/${playerName}`, year, 1);
+    } else {
+        const sanitizedSeason = season.replace(/\s+/g, "");
+        title.innerText = `Season Stats: ${sanitizedSeason}-${Number(sanitizedSeason) - 1}`;
+        getData(`player/${playerName}`, sanitizedSeason, 1);
+    }
+}
+
+function handleTextBox2Input(textBox2, title2, year) {
+    const value = textBox2.value;
+    const [playerName, season] = value.split(',').map(item => item.trim());
+
+    if (!season) {
+        title2.innerText = `Season Stats: ${year}-${Number(year) - 1}`;
+        getData(`player/${playerName}`, year, 2);
+    } else {
+        const sanitizedSeason = season.replace(/\s+/g, "");
+        title2.innerText = `Season Stats: ${sanitizedSeason}-${Number(sanitizedSeason) - 1}`;
+        getData(`player/${playerName}`, sanitizedSeason, 2);
+    }
+}
+
+function filterTableRows(filterValue) {
+    const rows = document.querySelectorAll("#stats tr");
+
+    rows.forEach((row, index) => {
+        if (index === 0) return; // Skip the first row
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filterValue) ? "" : "none";
+    });
+}
+
+
+async function getData(type, year, stat) {
     
     const url1 = type + '/' + year;
     console.log(url1);
@@ -96,7 +153,8 @@ async function getData(type, year) {
             history.set(year, [type, data])
         }
 
-        displayData(type, (history.get(year))[1], year)
+        displayData(type, (history.get(year))[1], year, stat)
+        console.log((history.get(year))[1])
         console.log(history)
 
     }
@@ -105,12 +163,7 @@ async function getData(type, year) {
     }
 }
 
-async function displayData(type, data, year){
-    
-    let table = document.getElementById('stats');
-    
-    table.innerHTML = '';
-
+async function displayData(type, data, year, stat){
 
     if(type == "players"){
         var stats = playerStats
@@ -120,116 +173,124 @@ async function displayData(type, data, year){
         var stats = gameStats
     }
     else if(type.startsWith("player")){
-        displayAdv(data[0])
+        displayAdv(data, stat)
         return        
     }
 
-    
-    // Create the header row
-    let headerRow = document.createElement('tr');
-    
-    // Loop through the headers and create <th> elements
-    stats.forEach((stat) => {
-        let th = document.createElement('th');
-        th.innerText = stat;
-        headerRow.appendChild(th);
-    });
-    
-    // Append the header row to the table
-    table.appendChild(headerRow);
-    
+    let table = document.getElementById('stats');
 
-    for (let i = 0; i < data.length; i++) {
+    table.innerHTML = '';
 
+    table.appendChild(createHeaderRow(stats));
 
-        let row = document.createElement('tr');
-
-
-        if(type=="players"){
-            row.onclick = function() {
-                
-                advStats(players[i])
-            };
-        }
-
-
-        stats.forEach((stat) => {
-
-            let cell = document.createElement('td');
-
-
-
-
-            if(data[i][stat] == null){
-                cell.innerText = ""
-            }
-            else if(stat == "BOXSCORE"){
-                let link = document.createElement('a');
-                link.href = "https://www.basketball-reference.com" + data[i][stat];
-                link.innerText = "BOXSCORE";
-                cell.appendChild(link);
-            }
-            else{
-                cell.innerText = data[i][stat]
-            }
-
-            row.appendChild(cell)
-        });
-
-
+    data.forEach(item => {
+        const row = createDataRow(item, stats, type);
         table.appendChild(row);
-    }
+    });
 
 }
 
-async function displayAdv(player) {
+async function displayAdv(players, stat) {
     
-    let table = document.getElementById('stats');
-        
+
+    if(stat==1){
+        var table = document.getElementById('stats');
+    }
+    else{
+        var table = document.getElementById('stats2');
+
+    }
+
     table.innerHTML = '';
+
+
+    players.forEach(player => {
+        let stats = playerStats
+        let stats2 = advStats
+
+        // Add an empty row for space
+        const emptyRow = document.createElement("tr");
+        const emptyCell = document.createElement("td");
+        emptyCell.colSpan = 16;  
+        emptyCell.style.height = "20px";  
+        emptyCell.style.border = "1px solid"
     
-    let stats = playerStats
-    let stats2 = advStats
+    
+        // Create the header row
+        let headerRow = document.createElement('tr');
+        let headerRow2 = document.createElement('tr');
+    
+        let row = document.createElement('tr');
+    
+        // Loop through the headers and create <th> elements
+        stats.forEach((stat) => {
+            let th = document.createElement('th');
+            th.innerText = stat;
+            headerRow.appendChild(th);
+    
+            let cell = document.createElement('td');
+            cell.innerText = player[stat]
+            if(player[stat] == null){
+                cell.innerText = ""
+            }
+            row.appendChild(cell)
+        });
 
-    // Create the header row
-    let headerRow = document.createElement('tr');
-    let headerRow2 = document.createElement('tr');
+    
+        let row2 = document.createElement('tr');
+    
+        stats2.forEach((adv)=>{
+            let th = document.createElement('th');
+            th.innerText = adv;
+            headerRow2.appendChild(th);
+    
+            let cell = document.createElement('td');
+            cell.innerText = player[adv]
+            if(player[adv] == null){
+                cell.innerText = ""
+            }
+            row2.appendChild(cell)
+        })
+        
+        table.appendChild(headerRow);
+        table.appendChild(row);
+        table.appendChild(headerRow2); 
+        table.appendChild(row2);
 
-    let row = document.createElement('tr');
 
-    // Loop through the headers and create <th> elements
-    stats.forEach((stat) => {
-        let th = document.createElement('th');
+        emptyRow.appendChild(emptyCell);
+        table.appendChild(emptyRow);
+
+    });
+}
+
+
+
+function createHeaderRow(stats) {
+    const headerRow = document.createElement('tr');
+    stats.forEach(stat => {
+        const th = document.createElement('th');
         th.innerText = stat;
         headerRow.appendChild(th);
-
-        let cell = document.createElement('td');
-        cell.innerText = player[stat]
-        if(player[stat] == null){
-            cell.innerText = ""
-        }
-        row.appendChild(cell)
     });
-    table.appendChild(headerRow);
-    table.appendChild(row);
+    return headerRow;
+}
 
-    let row2 = document.createElement('tr');
-
-    stats2.forEach((adv)=>{
-        let th = document.createElement('th');
-        th.innerText = adv;
-        headerRow2.appendChild(th);
-
-        let cell = document.createElement('td');
-        cell.innerText = player[adv]
-        if(player[adv] == null){
-            cell.innerText = ""
+function createDataRow(item, stats, type) {
+    const row = document.createElement('tr');
+    stats.forEach(stat => {
+        const cell = document.createElement('td');
+        if (item[stat] == null) {
+            cell.innerText = "";
+        } else if (stat === "BOXSCORE") {
+            const link = document.createElement('a');
+            link.href = `https://www.basketball-reference.com${item[stat]}`;
+            link.innerText = "BOXSCORE";
+            cell.appendChild(link);
+        } else {
+            cell.innerText = item[stat];
         }
-        row2.appendChild(cell)
-    })
-    
-    // Append the header row to the table
-    
-    table.appendChild(headerRow2);
-    table.appendChild(row2);
+        row.appendChild(cell);
+    });
+    return row;
 }

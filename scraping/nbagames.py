@@ -35,88 +35,98 @@ yearsBAA = ['1949','1948','1947']
 
 def NBAGameStats():
     for year in yearsNBA:
-        year_games = []
-        for month in months:
-            print("\n")
-            print(year, month)
-
-            if(year in yearsBAA):
-                extension = "BAA_" + year + "_games-"+month+".html"
-            else:
-                extension = "NBA_" + year + "_games-"+month+".html"
-
-            url = "https://www.basketball-reference.com/leagues/" + extension
-            try:
-                html_content = requests.get(url).content
-                print("HTML content fetched successfully")
-                time.sleep(5)
-                soup = BeautifulSoup(html_content, 'html.parser')
-                table = soup.find('table', id='schedule')
-
-                table_headers = ["DATE", "VISITOR", "VPTS", "HOME", "HPTS", "BOXSCORE", "OT", "ATT", "LOG", "ARENA", "NOTES"]
-
-                try:
-                    rows = table.find_all('tr')[1:]
-                    
-                    for row in rows:
-                        date = row.find('th')
-                        stats = []
-                        stats.append(date.getText())
-                        cols = row.find_all('td')
-                        if(len(cols) > 0):
-                            for i in range(len(cols)):
-                                if(cols[i].get('data-stat') == 'game_start_time'):
-                                    pass
-                                elif(cols[i].getText() == 'Box Score'):
-                                    stats.append(cols[i].find('a')['href'])
-                                elif(cols[i].getText() == ''):
-                                    stats.append('-')
-                                else:
-                                    stats.append(cols[i].getText())
-                            year_games.append(stats)
-
-                except AttributeError:
-                    print ("Games table could not be found")
-            except HTTPError as e:
-                print("Error fetching html content. Skipping...")               
-                    
-        df = pd.DataFrame(year_games, columns=table_headers)
-
-        df = df.apply(pd.to_numeric, errors='ignore')
-
-
-        print(df.head(3))
-        print("\n\n")
 
         mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="abhi12345",
+            user="hoopstatsadmin",
+            password="strongaura1407#",
+            host="hoopstatsdb.mysql.database.azure.com",
+            port=3306,
             database="game_stats"
         )
 
         mycursor = mydb.cursor()
-
-        cleanUp = f"DROP TABLE IF EXISTS season{year};"
-
-        columns = (f"`{headers}` VARCHAR(255)" for headers in table_headers)
         
-        columns_str = ",\n    ".join(columns)
-
-        sql = f"""
-        CREATE TABLE season{year} (
-            ID INT AUTO_INCREMENT PRIMARY KEY,
-            {columns_str}
-        );
+        check = f"""
+            SELECT COUNT(*)
+            FROM information_schema.tables 
+            WHERE table_schema = 'game_stats'
+            AND table_name = 'season{year}';
         """
 
-        mycursor.execute(cleanUp)
-        mycursor.execute(sql)
+        mycursor.execute(check)
+        checkRes = mycursor.fetchone()
 
-        engine = create_engine("mysql+mysqlconnector://root:abhi12345@localhost/game_stats")
+        year_games = []
 
-        df.to_sql(f"season{year}", con=engine, if_exists='append', index=False)
+        if(checkRes[0] == 0):
+            for month in months:
+                print("\n")
+                print(year, month)
 
+                if(year in yearsBAA):
+                    extension = "BAA_" + year + "_games-"+month+".html"
+                else:
+                    extension = "NBA_" + year + "_games-"+month+".html"
+
+                url = "https://www.basketball-reference.com/leagues/" + extension
+                try:
+                    html_content = requests.get(url).content
+                    print("HTML content fetched successfully")
+                    time.sleep(5)
+                    soup = BeautifulSoup(html_content, 'html.parser')
+                    table = soup.find('table', id='schedule')
+
+                    table_headers = ["DATE", "VISITOR", "VPTS", "HOME", "HPTS", "BOXSCORE", "OT", "ATT", "LOG", "ARENA", "NOTES"]
+
+                    try:
+                        rows = table.find_all('tr')[1:]
+                        
+                        for row in rows:
+                            date = row.find('th')
+                            stats = []
+                            stats.append(date.getText())
+                            cols = row.find_all('td')
+                            if(len(cols) > 0):
+                                for i in range(len(cols)):
+                                    if(cols[i].get('data-stat') == 'game_start_time'):
+                                        pass
+                                    elif(cols[i].getText() == 'Box Score'):
+                                        stats.append(cols[i].find('a')['href'])
+                                    elif(cols[i].getText() == ''):
+                                        stats.append('-')
+                                    else:
+                                        stats.append(cols[i].getText())
+                                year_games.append(stats)
+
+                    except AttributeError:
+                        print ("Games table could not be found")
+                except HTTPError as e:
+                    print("Error fetching html content. Skipping...")               
+                        
+            df = pd.DataFrame(year_games, columns=table_headers)
+
+            df = df.apply(pd.to_numeric, errors='ignore')
+
+
+            print(df.head(3))
+            print("\n\n")
+
+            columns = (f"`{headers}` VARCHAR(255)" for headers in table_headers)
             
+            columns_str = ",\n    ".join(columns)
 
+            sql = f"""
+            CREATE TABLE season{year} (
+                ID INT AUTO_INCREMENT PRIMARY KEY,
+                {columns_str}
+            );
+            """
+            mycursor.execute(sql)
+
+            engine = create_engine("mysql+mysqlconnector://hoopstatsadmin:strongaura1407#@hoopstatsdb.mysql.database.azure.com:3306/game_stats")
+
+            df.to_sql(f"season{year}", con=engine, if_exists='append', index=False)
+        else:
+            print("season:" + year + " already exists")
+    
 NBAGameStats()

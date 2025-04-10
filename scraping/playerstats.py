@@ -29,82 +29,109 @@ yearsBAA = ['1949','1948','1947']
 
 
 def NBAPlayerStats():
+
+    mydb = mysql.connector.connect(
+        user="hoopstatsadmin",
+        password="strongaura1407#",
+        host="hoopstatsdb.mysql.database.azure.com",
+        port=3306,
+        database="player_stats"
+    )
+
+    mycursor = mydb.cursor()
+
+
+    
     for year in yearsNBA:
-        print("\n")
-        print(year)
 
-        if(year in yearsBAA):
-            extension = "BAA_" + year + "_per_game.html"
-        else:
-            extension = "NBA_" + year + "_per_game.html"
-
-        try:
-            url = "https://www.basketball-reference.com/leagues/" + extension
-            html_content = requests.get(url).content
-            print("HTML content fetched successfully")
-            time.sleep(5)
-            soup = BeautifulSoup(html_content, 'html.parser')
-            table = soup.find('table', id='per_game_stats')
-            
-            table_headers = []
-            player_stats = []
-
-            try:
-                for th in table.find_all('tr', limit=1)[0].find_all('th')[1:]:
-                    table_headers.append(th.getText())
-
-                rows = table.find_all('tr')[1:]
-
-                for row in rows:
-                    cols = row.find_all('td')
-                    if(len(cols) > 0):
-                        stats = [col.getText() for col in cols]
-                        player_stats.append(stats)
-            except AttributeError:
-                    print ("Player table could not be found")
-        except HTTPError as e:
-            print("Error fetching html content. Skipping...")  
-
-        df = pd.DataFrame(player_stats, columns=table_headers)
-
-        df = df.apply(pd.to_numeric, errors='ignore')
-
-        df_sorted = df.sort_values(by='PTS', ascending=False)
-
-        print(df.head(3))
-
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="abhi12345",
-            database="player_stats"
-
-        )
-
-        mycursor = mydb.cursor()
- 
-        cleanUp = f"DROP TABLE IF EXISTS season{year};"
-
-
-        columns_sql = [f"`{headers}` VARCHAR(255)" for headers in table_headers]
-
-        # Join all columns into a formatted SQL string, separated by commas and newlines
-        columns_str = ",\n    ".join(columns_sql)
-
-        # Create the SQL query
-        sql = f"""
-        CREATE TABLE season{year} (
-            ID INT AUTO_INCREMENT PRIMARY KEY,
-            {columns_str}
-        );
+        check = f"""
+            SELECT COUNT(*)
+            FROM information_schema.tables 
+            WHERE table_schema = 'PLAYER_stats'
+            AND table_name = 'season{year}';
         """
 
-        mycursor.execute(cleanUp)
-        mycursor.execute(sql)
+        mycursor.execute(check)
+        checkRes = mycursor.fetchone()
 
-        engine = create_engine("mysql+mysqlconnector://root:abhi12345@localhost/player_stats")
+        if(checkRes[0] == 0):
+            print("\n")
+            print(year)
 
-        df_sorted.to_sql(f"season{year}", con=engine, if_exists='append', index=False)
+            if(year in yearsBAA):
+                extension = "BAA_" + year + "_per_game.html"
+            else:
+                extension = "NBA_" + year + "_per_game.html"
+
+            try:
+                url = "https://www.basketball-reference.com/leagues/" + extension
+                html_content = requests.get(url).content
+                print("HTML content fetched successfully")
+                time.sleep(5)
+                soup = BeautifulSoup(html_content, 'html.parser')
+                table = soup.find('table', id='per_game_stats')
+                
+                table_headers = []
+                player_stats = []
+
+                try:
+                    for th in table.find_all('tr', limit=1)[0].find_all('th')[1:]:
+                        table_headers.append(th.getText())
+
+                    rows = table.find_all('tr')[1:]
+
+                    for row in rows:
+                        cols = row.find_all('td')
+                        if(len(cols) > 0):
+                            stats = [col.getText() for col in cols]
+                            player_stats.append(stats)
+                except AttributeError:
+                        print ("Player table could not be found")
+            except HTTPError as e:
+                print("Error fetching html content. Skipping...")  
+
+            df = pd.DataFrame(player_stats, columns=table_headers)
+
+            df = df.apply(pd.to_numeric, errors='ignore')
+
+            df_sorted = df.sort_values(by='PTS', ascending=False)
+
+            print(df.head(3))
+
+            mydb = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="abhi12345",
+                database="player_stats"
+
+            )
+
+            mycursor = mydb.cursor()
+    
+            cleanUp = f"DROP TABLE IF EXISTS season{year};"
+
+
+            columns_sql = [f"`{headers}` VARCHAR(255)" for headers in table_headers]
+
+            # Join all columns into a formatted SQL string, separated by commas and newlines
+            columns_str = ",\n    ".join(columns_sql)
+
+            # Create the SQL query
+            sql = f"""
+            CREATE TABLE season{year} (
+                ID INT AUTO_INCREMENT PRIMARY KEY,
+                {columns_str}
+            );
+            """
+
+            mycursor.execute(cleanUp)
+            mycursor.execute(sql)
+
+            engine = create_engine("mysql+mysqlconnector://hoopstatsadmin:strongaura1407#@hoopstatsdb.mysql.database.azure.com:3306/player_stats")
+
+            df_sorted.to_sql(f"season{year}", con=engine, if_exists='append', index=False)
+        else:
+            print("season:" + year + " already exists")
 
 
 NBAPlayerStats()
