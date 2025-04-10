@@ -9,7 +9,7 @@ pool:
 variables:
   dockerRegistryServiceConnection: 'DockerConn'  # Docker Hub service connection
   imageName: 'abhishek1231/hoopstats'  # Docker Hub repository
-  imageTag: '1.1'  # Tag for the Docker image
+  imageTag: 'latest'  # Tag for the Docker image
 
 steps:
 # Step to log in to Docker Hub
@@ -26,9 +26,10 @@ steps:
 
 # Step to set up Docker Buildx
 - script: |
+    export DOCKER_BUILDKIT=1
     docker buildx create --use --name multi-builder
     docker buildx inspect --bootstrap
-  displayName: 'Set up Docker Buildx'
+  displayName: 'Set up Docker Buildx with BuildKit'
 
 # Step to build and push the Docker image with Buildx
 - script: |
