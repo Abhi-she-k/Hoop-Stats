@@ -7,9 +7,9 @@ pool:
   name: 'Default'  # Ensure you're using an agent that has Docker installed
 
 variables:
-  dockerRegistryServiceConnection: 'DockerConn'  # Docker Hub service connection
+  dockerRegistryServiceConnection: 'dockerconn'  # Docker Hub service connection
   imageName: 'abhishek1231/hoopstats'  # Docker Hub repository
-  imageTag: 'latest'  # Tag for the Docker image
+  imageTag: '1.1'  # Tag for the Docker image
 
 steps:
 # Step to log in to Docker Hub
