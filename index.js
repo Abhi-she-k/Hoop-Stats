@@ -10,22 +10,22 @@ const port = 3004;
 
 
 var gamePool = mysql.createPool({
-    host: "hoopstatsdb.mysql.database.azure.com",
-    user: "hoopstatsadmin",
-    port: 3306,
-    password: "strongaura1407#",
-    database: "game_stats",
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    port: process.env.DB_PORT,
+    password: process.env.DB_PASSWORD,
+    database: process.env.GAME_DB,
     // ssl: {
     //     rejectUnauthorized: false
     // }
 });
 
 var playerPool = mysql.createPool({
-    host: "hoopstatsdb.mysql.database.azure.com",
-    user: "hoopstatsadmin",
-    port: 3306,
-    password: "strongaura1407#",
-    database: "player_stats",
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    port: process.env.DB_PORT,
+    password: process.env.DB_PASSWORD,
+    database: process.env.PLAYER_DB,
     // ssl: {
     //     rejectUnauthorized: false
     // }
