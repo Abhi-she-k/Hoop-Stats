@@ -17,35 +17,36 @@ const games = document.getElementById('option2');
 const player = document.getElementById('option3');
 const compare = document.getElementById('option4');
 
+const d = new Date();
+const currentYear = d.getFullYear();
 
 document.addEventListener('DOMContentLoaded', function () {
-    const d = new Date();
-    const year = d.getFullYear();
+  
 
     cleanUP();
-    getData("players", year);
-    updateTitleAndPlaceholder(title, year, 'Enter Season (ex. 2024)');
+    getData("players", currentYear);
+    updateTitleAndPlaceholder("Games Stats", currentYear, 'Enter Season (ex. 2024)');
 
     // Event listener for 'games' option
     games.addEventListener('click', function () {
         cleanUP();
-        updateTitleAndPlaceholder(title, year, 'Enter Season (ex. 2024)');
-        getData("games", year, 1);
+        updateTitleAndPlaceholder("Games Stats", currentYear, 'Enter Season (ex. 2024)');
+        getData("games", currentYear, 1);
     });
 
     // Event listener for 'players' option
     players.addEventListener('click', function () {
         cleanUP();
-        updateTitleAndPlaceholder(title, year, 'Enter Season (ex. 2024)');
-        getData("players", year, 1);
+        updateTitleAndPlaceholder("Players Stats", currentYear, 'Enter Season (ex. 2024)');
+        getData("players", currentYear, 1);
     });
 
     // Event listener for 'player' option
     player.addEventListener('click', function () {
         cleanUP();
         filter.style.display = "none";
-        updateTitleAndPlaceholder(title, year, 'Enter "Player, Season" (ex. LeBron, 2014)');
-        getData("player/lebron", year, 1);
+        updateTitleAndPlaceholder("Player Stats", currentYear, 'Enter Player and Season (ex. Lebron, 2024)');
+        getData("player/lebron", currentYear, 1);
     });
 
     // Event listener for 'compare' option
@@ -56,25 +57,25 @@ document.addEventListener('DOMContentLoaded', function () {
         title2.style.display = "";
         stats2.style.display = "";
 
-        updateTitleAndPlaceholder(title, year, 'Enter "Player, Season" (ex. LeBron, 2014)');
-        textBox.placeholder = 'Enter "Player, Season" (ex. LeBron, 2014)';
-        getData("player/lebron", year, 1);
-
-        title2.innerText = "Season Stats: 1996-1995";
-        getData("player/michael jordan", 1995, 2);
+        updateTitleAndPlaceholder("Player Stats", currentYear, 'Enter Player and Season (ex. Lebron, 2024)');
+        getData("player/lebron", currentYear, 1);
+        title2.innerText = "Player Stats: 1996-1995";
+        getData("player/michael jordan", 1996, 2);
     });
 
     // Event listener for textBox input
     textBox.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
-            handleTextBoxInput(textBox, title, year);
+            content = textBox.value
+            handleTextBoxInput(content);
         }
     });
 
     // Event listener for textBox2 input
     textBox2.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
-            handleTextBox2Input(textBox2, title2, year);
+            content = textBox2.value
+            handleTextBox2Input(content);
         }
     });
 
@@ -95,38 +96,73 @@ function cleanUP() {
     if (stats2) stats2.style.display = "none";
 }
 
-function updateTitleAndPlaceholder(titleElement, year, placeholderText) {
-    titleElement.innerText = `Season: ${year}-${Number(year) - 1}`;
-    const textBox = document.getElementById('textBox');
+function updateTitleAndPlaceholder(text, year, placeholderText) {
+    title.innerText = `${text}: ${year}-${Number(year) - 1}`;
     textBox.placeholder = placeholderText;
 }
 
-function handleTextBoxInput(textBox, title, year) {
-    const value = textBox.value;
-    const [playerName, season] = value.split(',').map(item => item.trim());
+function handleTextBoxInput(content) {
 
-    if (!season) {
-        title.innerText = `Season Stats: ${year}-${Number(year) - 1}`;
+    if (players.checked ) {
+
+        var year = content
+
+        if( year == null){
+            year = currentYear
+        }
+        updateTitleAndPlaceholder("Players Stats", year, 'Enter Season (ex. 2024)');
+        getData(`players`, year, 1);
+        
+    } 
+    else if (games.checked) {
+
+        var year = content
+
+        if( year == null){
+            year = currentYear
+
+        }
+        updateTitleAndPlaceholder("Games Stats", year, 'Enter Season (ex. 2024)');
+        getData(`games`, year, 1);
+
+    }
+    else if(player.checked) {
+        
+        var [playerName, year] = content.split(',').map(item => item.trim());
+        
+
+        if(year == null){
+            year = currentYear
+        }
+        updateTitleAndPlaceholder("Player Stats", year, 'Enter Season (ex. 2024)');
         getData(`player/${playerName}`, year, 1);
-    } else {
-        const sanitizedSeason = season.replace(/\s+/g, "");
-        title.innerText = `Season Stats: ${sanitizedSeason}-${Number(sanitizedSeason) - 1}`;
-        getData(`player/${playerName}`, sanitizedSeason, 1);
+
+    }
+    else if(compare.checked) {
+        var [playerName, year] = content.split(',').map(item => item.trim());
+        
+
+        if(year == null){
+            year = currentYear
+        }
+            
+        updateTitleAndPlaceholder("Player Stats", year, 'Enter Season (ex. 2024)');
+        getData(`player/${playerName}`, year, 1);
+    
     }
 }
 
-function handleTextBox2Input(textBox2, title2, year) {
-    const value = textBox2.value;
-    const [playerName, season] = value.split(',').map(item => item.trim());
+function handleTextBox2Input(content) {
+    
+    var [playerName, year] = content.split(',').map(item => item.trim());
 
-    if (!season) {
-        title2.innerText = `Season Stats: ${year}-${Number(year) - 1}`;
-        getData(`player/${playerName}`, year, 2);
-    } else {
-        const sanitizedSeason = season.replace(/\s+/g, "");
-        title2.innerText = `Season Stats: ${sanitizedSeason}-${Number(sanitizedSeason) - 1}`;
-        getData(`player/${playerName}`, sanitizedSeason, 2);
+
+    if(year == null){
+        year = currentYear
     }
+    title2.innerText = `Player Stats: ${year}-${Number(year) - 1}`;
+    getData(`player/${playerName}`, year, 2);
+    
 }
 
 function filterTableRows(filterValue) {
